@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dds xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+    <profiles>
+        <participant profile_name="default_participant" is_default_profile="true">
+            <rtps>
+                <name>ros2_modbus_gateway</name>
+            </rtps>
+        </participant>
+        <data_writer profile_name="default_writer" is_default_profile="true">
+            <qos>
+                <publishMode>
+                    <kind>ASYNCHRONOUS</kind>
+                </publishMode>
+                <reliability>
+                    <kind>RELIABLE</kind>
+                    <max_blocking_time>
+                        <sec>0</sec>
+                        <nanosec>1000000</nanosec>
+                    </max_blocking_time>
+                </reliability>
+            </qos>
+        </data_writer>
+    </profiles>
+</dds>

@@ -1,0 +1,13 @@
+uint8 command                 # 1:START, 2:STOP, 3:RESET, 4:SET_SETPOINT
+uint16 value                  # SET_SETPOINT일 때 목표값(0~1000), 나머지는 0
+---
+bool success                  # outcome == CONFIRMED일 때만 true
+uint64 command_id             # 수락된 명령 번호 (거부 시 0)
+uint8 outcome                 # 0:NOT_SENT, 1:CONFIRMED, 2:UNKNOWN, 3:REJECTED
+uint16 error_code             # 성공 시 0, 실패 시 §4.1 에러 코드
+int32 system_errno            # OS 소켓 errno (없으면 0)
+uint8 modbus_exception        # Modbus Exception 응답 코드 (없으면 0)
+string message                # 결과 진단 문자열 (최대 160자)
+uint64 generation             # 명령 실행 당시 세션 번호
+uint64 confirmed_sample_sequence # 반영이 확인된 표본 번호
+uint32 elapsed_ms             # 명령 접수부터 결과 확정까지 소요된 시간 (ms)

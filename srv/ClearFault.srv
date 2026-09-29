@@ -1,0 +1,6 @@
+bool force_clear              # 강제 리셋 여부 (기본 false, true 시 PLC 에러 무시 시도)
+---
+bool success                  # 알람 해제 성공 여부
+uint16 error_code             # 실패 시 에러 코드
+string message                # 결과 설명 문자열
+uint32 elapsed_ms             # 처리 소요 시간 (ms)

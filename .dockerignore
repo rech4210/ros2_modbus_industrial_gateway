@@ -1,0 +1,13 @@
+.git
+.gitignore
+build/
+install/
+log/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.sock
+benchmark/*.csv
+benchmark/*.png
+benchmark/*.gif
+benchmark/summary.json

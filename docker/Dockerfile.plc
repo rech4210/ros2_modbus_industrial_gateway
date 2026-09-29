@@ -1,0 +1,25 @@
+FROM python:3.11-slim-bookworm
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN if id -u 1000 >/dev/null 2>&1; then \
+        EXISTING_USER=$(id -nu 1000); \
+        usermod -l plc $EXISTING_USER || true; \
+    else \
+        groupadd -g 1000 plc && useradd -u 1000 -g plc -m -s /bin/bash plc; \
+    fi
+
+WORKDIR /app
+
+COPY mock_plc/requirements.txt /app/mock_plc/requirements.txt
+RUN pip install --no-cache-dir -r /app/mock_plc/requirements.txt
+
+RUN mkdir -p /run/plc /app && chown -R 1000:1000 /run/plc /app
+
+USER 1000
+
+CMD ["python", "-m", "mock_plc.mock_plc_server", "--host", "0.0.0.0", "--port", "5020"]

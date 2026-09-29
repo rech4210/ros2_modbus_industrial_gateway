@@ -1,0 +1,17 @@
+gateway_node:
+  ros__parameters:
+    station_id: 1
+    plc_host: "mock_plc"
+    plc_port: 5020
+    unit_id: 1
+    coil_base: 0
+    holding_base: 0
+    poll_period_ms: 20
+    publish_period_ms: 20
+    response_timeout_ms: 25
+    connect_timeout_ms: 200
+    consecutive_failures_limit: 3
+    heartbeat_timeout_ms: 80
+    command_timeout_ms: 300
+    recovery_progress_count: 2
+

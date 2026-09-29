@@ -1,0 +1,50 @@
+networks:
+  gateway_net:
+    driver: bridge
+
+volumes:
+  plc_sock:
+  ros2_build:
+  ros2_install:
+  ros2_log:
+
+services:
+  mock_plc:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.plc
+    container_name: mock_plc
+    user: "1000:1000"
+    networks:
+      - gateway_net
+    volumes:
+      - .:/app
+      - plc_sock:/run/plc
+    stop_grace_period: 3s
+    restart: unless-stopped
+    command: ["python", "-m", "mock_plc.mock_plc_server", "--host", "0.0.0.0", "--port", "5020"]
+
+  ros2_gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.gateway
+    container_name: ros2_gateway
+    user: "1000:1000"
+    networks:
+      - gateway_net
+    volumes:
+      - .:/ros2_ws/src/ros2_modbus_gateway
+      - plc_sock:/run/plc
+      - ros2_build:/ros2_ws/build
+      - ros2_install:/ros2_ws/install
+      - ros2_log:/ros2_ws/log
+    environment:
+      - ROS_DOMAIN_ID=42
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/ros2_ws/src/ros2_modbus_gateway/config/fastdds.xml
+    depends_on:
+      - mock_plc
+    stop_grace_period: 3s
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

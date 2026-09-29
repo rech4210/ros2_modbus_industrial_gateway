@@ -1,0 +1,42 @@
+# Build and install directories (ROS 2 / C++)
+build/
+install/
+log/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+venv/
+.venv/
+
+# Node / Frontend
+node_modules/
+hmi_web_prototype/node_modules/
+.npm/
+
+# Unix Domain Sockets & runtime files
+*.sock
+
+# Test and Benchmark generated data files (preserve visual charts for README)
+benchmark/*.csv
+*.csv
+!benchmark/demo.gif
+!benchmark/latency_jitter.png
+!benchmark/latency_jitter_3000.png
+!benchmark/summary.json
+
+# OS files
+.DS_Store
+Thumbs.db

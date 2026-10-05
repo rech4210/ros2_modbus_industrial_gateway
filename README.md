@@ -6,6 +6,8 @@
 
 ROS 2 Jazzy · C++17 · Boost.Asio · Python / Pymodbus · FastAPI / WebSocket · React / TypeScript · Docker Compose
 
+---
+
 ## 학습 동기와 접근
 
 가장 어려웠던 부분은 **작업 현장에서 발생하는 변수를 어떻게 관리할 것인가**였습니다. 실측 정보가 충분하지 않고, 환경에 따라 응답 시간과 복구 요구사항도 달라질 수 있었습니다. 그래서 불확실한 조건을 성능 보장으로 해석하지 않고, 먼저 가상 환경에서 확인할 수 있는 범위를 정하고 상태·명령·복구 기준을 보수적으로 잡았습니다.
@@ -26,6 +28,8 @@ AI와 협업해 구현과 문서화를 진행했습니다. 이 문서는 결과 
 
 > [!NOTE]
 > **현재 범위:** 가상 PLC를 사용하는 학습·시험 시스템입니다. 실제 PLC 연결, 제조 라인 운영, 하드 실시간 성능과 기능 안전 인증은 검증하지 않았습니다.
+
+---
 
 ## 시스템 구성
 
@@ -55,6 +59,8 @@ flowchart LR
 | `/plc/clear_fault` | 게이트웨이 내부 알람 래치 해제 |
 
 계약: [`msg/`](msg/) · [`srv/`](srv/) · 설정: [`config/gateway.yaml`](config/gateway.yaml)
+
+---
 
 ## 설계 선택과 학습 과정
 
@@ -109,6 +115,8 @@ C++·Python의 상수는 기존 계약 테스트로 비교합니다. 현재 규�
 
 근거: [`fault_proxy.py`](mock_plc/fault_proxy.py) · [`run_fault_scenarios.py`](tests/run_fault_scenarios.py) · [`test_contract.py`](tests/test_contract.py) · [ADR 001](docs/architecture/ADR_001_LAYERED_SSOT_AND_CONTRACT_TESTING.md)
 
+---
+
 ## 현재 검증 기록
 
 2026-10-05에 **기존 테스트·측정 코드로 재실행**했습니다. 테스트 코드와 구현 코드는 변경하지 않았습니다. 명령, 환경, 로그와 원시 데이터는 [검증 기록](docs/verification/2026-10-05/README.md)에 있습니다.
@@ -146,6 +154,8 @@ WSL2 Docker의 가상 PLC 환경에서 유효 표본 3,000개를 60.04초 동안
 
 [이전 2026-09-22 측정](benchmark/summary_3000.json)은 별도로 남겨 두었습니다. 실행 환경과 데이터가 다른 측정을 섞어 하나의 성능으로 제시하지 않습니다.
 
+---
+
 ## HMI와 시연
 
 ![웹 HMI 실행 화면](docs/assets/hmi_bolt_preview.png)
@@ -160,6 +170,8 @@ WSL2 Docker의 가상 PLC 환경에서 유효 표본 3,000개를 60.04초 동안
 정상 통신 → 장애 주입 → 알람 → 복구 → 알람 해제 흐름을 설명하는 기존 자료입니다. 최신 수치는 위 검증 기록을 기준으로 읽습니다.
 
 </details>
+
+---
 
 ## 직접 실행하기
 
@@ -205,6 +217,8 @@ docker compose exec ros2_gateway /gateway-entrypoint.sh python3 /ros2_ws/src/ros
 
 시나리오 시험은 노드를 일시 정지·재개하고 PLC 시험 상태를 바꿉니다. 측정 도구는 `benchmark/summary.json`과 CSV를 새로 생성합니다. 실제 ROS HMI 연결은 생성된 Python 인터페이스와 DDS 통신 환경을 갖춰야 합니다(`ROS_DOMAIN_ID=42`).
 
+---
+
 ## 적용 전 다시 확인할 항목
 
 현재 [설정](config/gateway.yaml)은 폴링 20ms, 응답 타임아웃 25ms, 연속 실패 3회, heartbeat 정체 80ms, 명령 타임아웃 300ms입니다. 현장의 PLC 스캔·통신 부하·허용 정지 시간과 맞춰 검토할 기준값입니다.
@@ -214,6 +228,8 @@ docker compose exec ros2_gateway /gateway-entrypoint.sh python3 /ros2_ws/src/ros
 - 통신 복구, PLC RESET, 내부 알람 해제, 운전 재개의 각 조건
 - 물리 안전 회로와 상위 제어기의 독립 watchdog 책임
 - 반복 실행과 원시 데이터로 확인할 지연 분포·자원 사용률
+
+---
 
 ## 상세 학습 문서
 

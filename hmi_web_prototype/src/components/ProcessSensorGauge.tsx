@@ -61,13 +61,9 @@ export const ProcessSensorGauge: React.FC<ProcessSensorGaugeProps> = ({
         <div className="pt-4 pb-1 px-1">
           <div className="relative h-6 well">
             <div
-              className="absolute inset-y-0 bg-hmi-soft border-x border-hmi-dim flex items-center justify-center overflow-hidden"
+              className="absolute inset-y-0 bg-hmi-soft border-x border-hmi-dim"
               style={{ left: `${BAND_LO / 10}%`, width: `${(BAND_HI - BAND_LO) / 10}%` }}
-            >
-              <span className="hidden sm:inline text-[10px] text-hmi-dim whitespace-nowrap px-1 truncate">
-                {t.process.normalBand}
-              </span>
-            </div>
+            />
 
             {/* Value fill: thin strip along the bottom so the band stays readable */}
             <div
@@ -88,7 +84,7 @@ export const ProcessSensorGauge: React.FC<ProcessSensorGaugeProps> = ({
           </div>
 
           {/* Scale */}
-          <div className="relative h-8 mt-1">
+          <div className="relative h-7 mt-1">
             {ticks.map((tk, i) => (
               <div
                 key={i}
@@ -103,6 +99,20 @@ export const ProcessSensorGauge: React.FC<ProcessSensorGaugeProps> = ({
                 </span>
               </div>
             ))}
+          </div>
+
+          {/* Normal band bracket, kept off the bar so the pointer never covers it */}
+          <div className="relative h-4">
+            <div
+              className="absolute top-0 h-2 border-x border-b border-hmi-dim"
+              style={{ left: `${BAND_LO / 10}%`, width: `${(BAND_HI - BAND_LO) / 10}%` }}
+            />
+            <span
+              className="absolute top-2 -translate-x-1/2 px-1 bg-hmi-panel text-[10px] text-hmi-dim whitespace-nowrap"
+              style={{ left: `${(BAND_LO + BAND_HI) / 20}%` }}
+            >
+              {t.process.normalBand}
+            </span>
           </div>
         </div>
       </div>

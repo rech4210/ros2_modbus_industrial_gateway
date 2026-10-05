@@ -65,17 +65,17 @@ export const MachineStateBadge: React.FC<MachineStateBadgeProps> = ({
       </div>
 
       <div className="p-3">
-      <Tooltip content={getTooltipContent()} position="bottom" className="w-full">
-        <div className={`w-full well border-l-[6px] ${edge} px-4 py-3 flex items-center gap-4 cursor-help`}>
-          {indicator()}
-          <div className="min-w-0">
-            <div className="text-[22px] md:text-[26px] font-bold leading-tight text-hmi-ink">
-              {getLocalizedStateText()}
+        <Tooltip content={getTooltipContent()} position="bottom" className="w-full">
+          <div className={`w-full well border-l-[6px] ${edge} px-4 py-3 flex items-center gap-4 cursor-help`}>
+            {indicator()}
+            <div className="min-w-0">
+              <div className="text-[22px] md:text-[26px] font-bold leading-tight text-hmi-ink">
+                {getLocalizedStateText()}
+              </div>
+              <div className="text-[11px] text-hmi-faint mt-0.5 num">{t.machineState.subtext}</div>
             </div>
-            <div className="text-[11px] text-hmi-faint mt-0.5 num">{t.machineState.subtext}</div>
           </div>
-        </div>
-      </Tooltip>
+        </Tooltip>
       </div>
     </section>
   );

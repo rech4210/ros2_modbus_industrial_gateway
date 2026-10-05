@@ -1,38 +1,63 @@
 <!doctype html>
-<html lang="ko" class="dark">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ROS 2 Modbus Industrial Gateway HMI (ISA-101)</title>
+    <title>ROS 2 Modbus Industrial Gateway HMI · Station 01</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // ISA-101 palette: neutral greys for normal operation; saturated color is
+      // reserved for alarm priorities (p1/p2/p3) and the selected/target value (sel).
       tailwind.config = {
-        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              slate: {
-                850: '#1E1F22',
-                800: '#2B2D30',
-                750: '#383A40',
-                700: '#3E4247',
-              }
-            }
-          }
-        }
-      }
+              hmi: {
+                bg: '#CDCDCD',
+                panel: '#DADADA',
+                well: '#E8E8E8',
+                soft: '#BCBCBC',
+                line: '#9A9A9A',
+                ink: '#141414',
+                dim: '#444444',
+                faint: '#6B6B6B',
+                head: '#383838',
+              },
+              p1: '#C80000',
+              p2: '#D97500',
+              p3: '#C9A800',
+              sel: '#1F4E9C',
+            },
+            fontFamily: {
+              mono: ['"JetBrains Mono"', 'Consolas', 'ui-monospace', 'monospace'],
+            },
+          },
+        },
+      };
     </script>
+    <style type="text/tailwindcss">
+      @layer components {
+        .panel { @apply bg-hmi-panel border border-hmi-line; }
+        .panel-head { @apply flex items-center justify-between gap-2 px-3 py-1.5 border-b border-hmi-line bg-hmi-soft/60 text-[12px] font-semibold text-hmi-ink; }
+        .panel-meta { @apply text-[11px] font-normal text-hmi-faint font-mono; }
+        .well { @apply bg-hmi-well border border-hmi-line; }
+        .num { @apply font-mono tabular-nums; }
+        .btn { @apply border border-hmi-dim bg-hmi-well text-hmi-ink shadow-[inset_0_1px_0_#ffffff,inset_0_-1px_0_#9a9a9a] hover:bg-white active:shadow-[inset_0_1px_2px_#7a7a7a] active:bg-hmi-soft disabled:shadow-none disabled:bg-hmi-panel disabled:text-hmi-faint/70 disabled:border-hmi-line disabled:cursor-not-allowed; }
+        .btn-sel { @apply border-sel bg-sel text-white shadow-none hover:bg-sel; }
+      }
+    </style>
     <style>
       @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
       body {
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         user-select: none;
       }
+      input[type='range'] { accent-color: #1F4E9C; }
     </style>
-    <script type="module" crossorigin src="/assets/index-BcTv9o3r.js"></script>
+    <script type="module" crossorigin src="/assets/index-C_eWCHuX.js"></script>
   </head>
-  <body class="bg-[#1E1F22] text-[#CFD8DC] antialiased overflow-x-hidden min-h-screen">
+  <body class="bg-hmi-bg text-hmi-ink antialiased overflow-x-hidden min-h-screen">
     <div id="root"></div>
   </body>
 </html>

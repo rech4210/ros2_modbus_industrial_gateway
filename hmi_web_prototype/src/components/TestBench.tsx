@@ -1,23 +1,6 @@
 import React, { useState } from 'react';
-import {
-  AlertOctagon,
-  AlertTriangle,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Flame,
-  Radio,
-  RefreshCw,
-  RotateCcw,
-  Sliders,
-  Unplug,
-  Wrench,
-  Zap,
-} from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
 import { FaultMode } from '../types';
-import { Tooltip } from './Tooltip';
 
 interface TestBenchProps {
   currentFaultMode: FaultMode;
@@ -31,6 +14,10 @@ interface TestBenchProps {
   lastTestOutcome?: string;
 }
 
+/**
+ * Engineering-only area. It is fenced off with a hatched border and a dark title bar so it
+ * never reads as part of the operator screen above it.
+ */
 export const TestBench: React.FC<TestBenchProps> = ({
   currentFaultMode,
   physicalEstop,
@@ -52,244 +39,159 @@ export const TestBench: React.FC<TestBenchProps> = ({
     onToggleProcessFault(next);
   };
 
+  const modes: { mode: FaultMode; delay?: number; label: string }[] = [
+    { mode: 'NORMAL', label: t.testBench.modeNormal },
+    { mode: 'DROP', label: t.testBench.modeDrop },
+    { mode: 'DELAY', delay: 30, label: t.testBench.modeDelay },
+    { mode: 'DISCONNECT', label: t.testBench.modeDisconnect },
+    { mode: 'FREEZE', label: t.testBench.modeFreeze },
+  ];
+
+  const boundaries: { val: number; label: string; reject?: boolean }[] = [
+    { val: -1, label: t.testBench.testBoundaryNeg, reject: true },
+    { val: 0, label: t.testBench.testBoundary0 },
+    { val: 500, label: t.testBench.testBoundary500 },
+    { val: 1000, label: t.testBench.testBoundary1000 },
+    { val: 1001, label: t.testBench.testBoundary1001, reject: true },
+  ];
+
+  const toggleState = (on: boolean) => (
+    <span className={`num text-[11px] ${on ? 'text-hmi-ink font-bold' : 'text-hmi-faint'}`}>
+      {on ? t.testBench.statusActive : t.testBench.statusInactive}
+    </span>
+  );
+
   return (
-    <section className="border-2 border-dashed border-amber-500/50 bg-[#1E1F22] rounded-2xl p-5 shadow-2xl space-y-4">
-      {/* Test Bench Header & Safety Demarcation */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-3">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-            <Wrench className="w-5 h-5" />
+    <section
+      className="p-[6px]"
+      style={{
+        background: 'repeating-linear-gradient(135deg, #8A8A8A 0 8px, #CDCDCD 8px 16px)',
+      }}
+    >
+      <div className="bg-hmi-panel">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-hmi-head text-white">
+          <div className="min-w-0">
+            <h2 className="text-[13px] font-semibold">{t.testBench.title}</h2>
+            <p className="text-[11px] text-white/70">{t.testBench.demarcationWarning}</p>
           </div>
-          <div>
-            <h2 className="text-base font-bold text-amber-300 flex items-center gap-2">
-              {t.testBench.title}
-            </h2>
-            <p className="text-xs text-amber-400/80 font-medium">
-              {t.testBench.demarcationWarning}
-            </p>
+          <div className="flex items-center gap-3">
+            <span className="num text-[11px] text-white/80">
+              {t.testBench.rttDisplay} <span className="text-white">{rttMs.toFixed(2)} ms</span>
+            </span>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              aria-expanded={isExpanded}
+              className="px-2 py-0.5 text-[11px] border border-white/40 text-white hover:bg-white/10"
+            >
+              {isExpanded ? '▲' : '▼'}
+            </button>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="text-xs font-mono bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300">
-            {t.testBench.rttDisplay} <strong className="text-emerald-400">{rttMs.toFixed(2)} ms</strong>
-          </div>
+        {isExpanded && (
+          <div className="p-3 grid gap-3 lg:grid-cols-2">
+            {/* Tier 1 */}
+            <div className="panel">
+              <div className="panel-head">
+                <span>{t.testBench.tier1Title}</span>
+                <span className="panel-meta">{t.testBench.safetyTier1Badge}</span>
+              </div>
+              <div className="p-3 space-y-3">
+                <p className="text-[11px] text-hmi-faint">{t.testBench.tier1Subtitle}</p>
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-300 transition-colors"
-          >
-            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-          </button>
-        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[12px] text-hmi-dim">
+                      <span>{t.testBench.estopToggle}</span>
+                      {toggleState(physicalEstop)}
+                    </div>
+                    <button
+                      onClick={() => onToggleEstop(!physicalEstop)}
+                      className={`btn w-full py-2 text-[12px] font-semibold ${
+                        physicalEstop ? '!bg-p1 !text-white !border-p1 shadow-none' : ''
+                      }`}
+                    >
+                      {physicalEstop ? t.testBench.estopToggleOff : t.testBench.estopToggleOn}
+                    </button>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[12px] text-hmi-dim">
+                      <span>{t.testBench.processFaultToggle}</span>
+                      {toggleState(processFaultActive)}
+                    </div>
+                    <button
+                      onClick={handleToggleProcessFault}
+                      className={`btn w-full py-2 text-[12px] font-semibold ${
+                        processFaultActive ? '!bg-p2 !text-hmi-ink !border-p2 shadow-none' : ''
+                      }`}
+                    >
+                      {processFaultActive ? t.testBench.processFaultOff : t.testBench.processFaultOn}
+                    </button>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="text-[12px] text-hmi-dim truncate">{t.testBench.oneShotReset}</div>
+                    <button onClick={onOneShotClearFault} className="btn w-full py-2 text-[12px] font-semibold">
+                      {t.testBench.triggerClearFaultBtn}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-[12px] text-hmi-dim">{t.testBench.boundaryTestTitle}</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-1">
+                    {boundaries.map((b) => (
+                      <button
+                        key={b.val}
+                        onClick={() => onTestSetpointBoundary(b.val)}
+                        className={`btn px-1.5 py-1 text-[11px] num ${b.reject ? 'border-dashed' : ''}`}
+                      >
+                        {b.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tier 2 */}
+            <div className="panel flex flex-col">
+              <div className="panel-head">
+                <span>{t.testBench.tier2Title}</span>
+                <span className="panel-meta">{t.testBench.networkTier2Badge}</span>
+              </div>
+              <div className="p-3 space-y-3 flex-1 flex flex-col">
+                <p className="text-[11px] text-hmi-faint">{t.testBench.tier2Subtitle}</p>
+
+                <div role="radiogroup" className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-3 xl:grid-cols-5 gap-1">
+                  {modes.map((m) => {
+                    const selected = currentFaultMode === m.mode;
+                    return (
+                      <button
+                        key={m.mode}
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => onInjectFault(m.mode, m.delay)}
+                        className={`btn px-1.5 py-2 text-[11px] font-semibold ${selected ? 'btn-sel' : ''}`}
+                      >
+                        {m.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {lastTestOutcome && (
+                  <div className="mt-auto well px-2.5 py-1.5 text-[11px] flex flex-wrap justify-between gap-2">
+                    <span className="text-hmi-faint">{t.testBench.lastResult}</span>
+                    <span className="num text-hmi-ink font-semibold">{lastTestOutcome}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {isExpanded && (
-        <div className="space-y-5 animate-in fade-in duration-200">
-          {/* =============================================================== */}
-          {/* TIER 1: Real-Time Inline Injection */}
-          {/* =============================================================== */}
-          <div className="bg-[#2B2D30] border border-slate-700/80 rounded-xl p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/60 pb-2">
-              <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Flame className="w-4 h-4 text-rose-400" />
-                  {t.testBench.tier1Title}
-                </h3>
-                <p className="text-xs text-slate-400">{t.testBench.tier1Subtitle}</p>
-              </div>
-              <span className="text-[10px] font-mono uppercase bg-rose-500/10 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">
-                {t.testBench.safetyTier1Badge}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* E-Stop Injection Card */}
-              <div className="bg-[#1E1F22] p-3 rounded-lg border border-slate-700/60 space-y-2">
-                <span className="text-xs font-semibold text-slate-300 flex items-center justify-between">
-                  <span>{t.testBench.estopToggle}</span>
-                  <span className={physicalEstop ? 'text-red-400 font-bold' : 'text-slate-500'}>
-                    {physicalEstop ? t.testBench.statusActive : t.testBench.statusInactive}
-                  </span>
-                </span>
-                <button
-                  onClick={() => onToggleEstop(!physicalEstop)}
-                  className={`w-full py-2.5 px-3 rounded-lg text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
-                    physicalEstop
-                      ? 'bg-red-700 hover:bg-red-600 text-white animate-pulse'
-                      : 'bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700'
-                  }`}
-                >
-                  <AlertOctagon className="w-4 h-4" />
-                  <span>{physicalEstop ? t.testBench.estopToggleOff : t.testBench.estopToggleOn}</span>
-                </button>
-              </div>
-
-              {/* Process Fault Injection Card */}
-              <div className="bg-[#1E1F22] p-3 rounded-lg border border-slate-700/60 space-y-2">
-                <span className="text-xs font-semibold text-slate-300 flex items-center justify-between">
-                  <span>{t.testBench.processFaultToggle}</span>
-                  <span className={processFaultActive ? 'text-amber-400 font-bold' : 'text-slate-500'}>
-                    {processFaultActive ? t.testBench.statusActive : t.testBench.statusInactive}
-                  </span>
-                </span>
-                <button
-                  onClick={handleToggleProcessFault}
-                  className={`w-full py-2.5 px-3 rounded-lg text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
-                    processFaultActive
-                      ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                      : 'bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700'
-                  }`}
-                >
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>{processFaultActive ? t.testBench.processFaultOff : t.testBench.processFaultOn}</span>
-                </button>
-              </div>
-
-              {/* Clear Fault 1-Shot Reset Card */}
-              <div className="bg-[#1E1F22] p-3 rounded-lg border border-slate-700/60 space-y-2">
-                <span className="text-xs font-semibold text-slate-300">
-                  {t.testBench.oneShotReset}
-                </span>
-                <button
-                  onClick={onOneShotClearFault}
-                  className="w-full py-2.5 px-3 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition-all shadow-md flex items-center justify-center gap-2 active:scale-95"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  <span>{t.testBench.triggerClearFaultBtn}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Setpoint Boundary Range Testing Buttons */}
-            <div className="bg-[#1E1F22] p-3 rounded-lg border border-slate-700/60 space-y-2">
-              <span className="text-xs font-semibold text-slate-300">
-                {t.testBench.boundaryTestTitle}
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                <button
-                  onClick={() => onTestSetpointBoundary(-1)}
-                  className="px-2.5 py-1.5 rounded bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 text-xs font-mono border border-rose-800/80 transition-colors"
-                >
-                  {t.testBench.testBoundaryNeg}
-                </button>
-                <button
-                  onClick={() => onTestSetpointBoundary(0)}
-                  className="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-mono border border-slate-700 transition-colors"
-                >
-                  {t.testBench.testBoundary0}
-                </button>
-                <button
-                  onClick={() => onTestSetpointBoundary(500)}
-                  className="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-750 text-sky-300 text-xs font-mono border border-slate-700 transition-colors"
-                >
-                  {t.testBench.testBoundary500}
-                </button>
-                <button
-                  onClick={() => onTestSetpointBoundary(1000)}
-                  className="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-750 text-slate-200 text-xs font-mono border border-slate-700 transition-colors"
-                >
-                  {t.testBench.testBoundary1000}
-                </button>
-                <button
-                  onClick={() => onTestSetpointBoundary(1001)}
-                  className="px-2.5 py-1.5 rounded bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 text-xs font-mono border border-rose-800/80 transition-colors"
-                >
-                  {t.testBench.testBoundary1001}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* =============================================================== */}
-          {/* TIER 2: Benchmark & Batch Fault Scenarios */}
-          {/* =============================================================== */}
-          <div className="bg-[#2B2D30] border border-slate-700/80 rounded-xl p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/60 pb-2">
-              <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-400" />
-                  {t.testBench.tier2Title}
-                </h3>
-                <p className="text-xs text-slate-400">{t.testBench.tier2Subtitle}</p>
-              </div>
-              <span className="text-[10px] font-mono uppercase bg-amber-500/10 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30">
-                {t.testBench.networkTier2Badge}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              <button
-                onClick={() => onInjectFault('NORMAL')}
-                className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                  currentFaultMode === 'NORMAL'
-                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-md'
-                    : 'bg-[#1E1F22] text-slate-300 border-slate-700 hover:bg-slate-750'
-                }`}
-              >
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{t.testBench.modeNormal}</span>
-              </button>
-
-              <button
-                onClick={() => onInjectFault('DROP')}
-                className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                  currentFaultMode === 'DROP'
-                    ? 'bg-amber-600 text-white border-amber-500 shadow-md'
-                    : 'bg-[#1E1F22] text-slate-300 border-slate-700 hover:bg-slate-750'
-                }`}
-              >
-                <AlertTriangle className="w-3.5 h-3.5" />
-                <span>{t.testBench.modeDrop}</span>
-              </button>
-
-              <button
-                onClick={() => onInjectFault('DELAY', 30)}
-                className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                  currentFaultMode === 'DELAY'
-                    ? 'bg-amber-600 text-white border-amber-500 shadow-md'
-                    : 'bg-[#1E1F22] text-slate-300 border-slate-700 hover:bg-slate-750'
-                }`}
-              >
-                <Clock className="w-3.5 h-3.5" />
-                <span>{t.testBench.modeDelay}</span>
-              </button>
-
-              <button
-                onClick={() => onInjectFault('DISCONNECT')}
-                className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                  currentFaultMode === 'DISCONNECT'
-                    ? 'bg-rose-600 text-white border-rose-500 shadow-md'
-                    : 'bg-[#1E1F22] text-slate-300 border-slate-700 hover:bg-slate-750'
-                }`}
-              >
-                <Unplug className="w-3.5 h-3.5" />
-                <span>{t.testBench.modeDisconnect}</span>
-              </button>
-
-              <button
-                onClick={() => onInjectFault('FREEZE')}
-                className={`py-2.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                  currentFaultMode === 'FREEZE'
-                    ? 'bg-sky-700 text-white border-sky-600 shadow-md'
-                    : 'bg-[#1E1F22] text-slate-300 border-slate-700 hover:bg-slate-750'
-                }`}
-              >
-                <Radio className="w-3.5 h-3.5" />
-                <span>{t.testBench.modeFreeze}</span>
-              </button>
-            </div>
-
-            {/* Test Feedback Notice */}
-            {lastTestOutcome && (
-              <div className="bg-[#1E1F22] p-2.5 rounded-lg border border-slate-700/80 text-xs font-mono text-slate-300 flex items-center justify-between">
-                <span>{t.testBench.lastResult}</span>
-                <span className="text-amber-400 font-bold">{lastTestOutcome}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </section>
   );
 };

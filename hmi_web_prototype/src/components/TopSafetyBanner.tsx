@@ -1,6 +1,6 @@
 import React from 'react';
-import { AlertOctagon, AlertTriangle, CheckCircle2, Info, ShieldAlert } from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
+import { AlarmMarker } from './AlarmMarker';
 import { Tooltip } from './Tooltip';
 
 interface TopSafetyBannerProps {
@@ -43,62 +43,33 @@ export const TopSafetyBanner: React.FC<TopSafetyBannerProps> = ({
     }
   };
 
-  return (
-    <div
-      className={`rounded-xl border transition-all duration-300 p-4 shadow-lg ${
-        physicalEstop
-          ? 'bg-rose-950/40 border-red-500/80 ring-2 ring-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse'
-          : isAlarm
-          ? 'bg-amber-950/40 border-amber-500/80 ring-1 ring-amber-500/40'
-          : 'bg-[#2B2D30] border-[#3E4247]'
-      }`}
-    >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-start space-x-3">
-          <div
-            className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
-              physicalEstop
-                ? 'bg-red-500/20 text-red-400 border border-red-500/40'
-                : isAlarm
-                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-            }`}
-          >
-            {physicalEstop ? (
-              <AlertOctagon className="w-6 h-6 animate-bounce" />
-            ) : isAlarm ? (
-              <AlertTriangle className="w-6 h-6" />
-            ) : (
-              <CheckCircle2 className="w-6 h-6" />
-            )}
-          </div>
+  const priority: 0 | 1 | 2 = physicalEstop ? 1 : isAlarm ? 2 : 0;
+  const edge = priority === 1 ? 'border-l-p1' : priority === 2 ? 'border-l-p2' : 'border-l-hmi-line';
+  const active = priority > 0;
 
-          <div>
-            <div className="flex items-center gap-2">
-              <span
-                className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                  physicalEstop
-                    ? 'bg-red-500 text-white'
-                    : isAlarm
-                    ? 'bg-amber-600 text-white'
-                    : 'bg-emerald-700/60 text-emerald-200'
-                }`}
-              >
+  return (
+    <section className={`panel border-l-[6px] ${edge}`} aria-live="polite">
+      <div className="flex flex-col md:flex-row md:items-stretch">
+        {/* Alarm summary */}
+        <div className="flex-1 flex items-start gap-3 px-3 py-2.5">
+          <div className="pt-0.5">
+            <AlarmMarker priority={priority} size={22} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+              <span className={`text-[13px] font-bold tracking-wide ${active ? 'text-hmi-ink' : 'text-hmi-dim'}`}>
                 {physicalEstop
                   ? t.safetyBanner.emergencyStopBadge
                   : isAlarm
-                  ? `${t.safetyBanner.safetyAlarmBadge} (${getLocalizedAlarmCause()})`
+                  ? t.safetyBanner.safetyAlarmBadge
                   : t.safetyBanner.systemHealthyBadge}
               </span>
-              <Tooltip content={t.safetyBanner.latchedNotice}>
-                <span className="text-[11px] text-slate-400 flex items-center gap-1 cursor-help underline decoration-dotted">
-                  <Info className="w-3.5 h-3.5" />
-                  ISO 13849-1 Latch
-                </span>
-              </Tooltip>
+              {isAlarm && !physicalEstop && (
+                <span className="text-[13px] text-hmi-ink">{getLocalizedAlarmCause()}</span>
+              )}
             </div>
 
-            <p className="text-sm font-semibold text-slate-100 mt-1">
+            <p className={`mt-0.5 text-[13px] leading-snug ${active ? 'text-hmi-ink' : 'text-hmi-dim'}`}>
               {physicalEstop
                 ? t.safetyBanner.eStopEmergency
                 : isAlarm
@@ -106,41 +77,32 @@ export const TopSafetyBanner: React.FC<TopSafetyBannerProps> = ({
                 : guideMsg || t.safetyBanner.normal}
             </p>
 
-            {/* Step-by-Step Operator Action Guidance for Alarms */}
-            {(physicalEstop || isAlarm) && (
-              <div className="mt-2 pt-2 border-t border-slate-700/60 flex flex-wrap gap-y-1 gap-x-4 text-xs font-medium">
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    physicalEstop ? 'text-red-300 font-bold' : 'text-slate-400 line-through'
-                  }`}
-                >
-                  <span className="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px]">
-                    1
-                  </span>
+            {/* Recovery procedure: current step in bold, finished step struck through */}
+            {active && (
+              <ol className="mt-2 grid gap-1 text-[12px] text-hmi-dim">
+                <li className={`flex gap-2 ${physicalEstop ? 'text-hmi-ink font-semibold' : 'line-through'}`}>
+                  <span className="num w-4 text-right">1</span>
                   <span>{t.safetyBanner.eStopStep1}</span>
-                </div>
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    !physicalEstop && isAlarm ? 'text-amber-300 font-bold' : 'text-slate-500'
-                  }`}
-                >
-                  <span className="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px]">
-                    2
-                  </span>
+                </li>
+                <li className={`flex gap-2 ${!physicalEstop && isAlarm ? 'text-hmi-ink font-semibold' : ''}`}>
+                  <span className="num w-4 text-right">2</span>
                   <span>{t.safetyBanner.eStopStep2}</span>
-                </div>
-              </div>
+                </li>
+              </ol>
             )}
           </div>
         </div>
 
-        {/* Safety Boundary Category Pill */}
-        <Tooltip content={t.safetyBanner.monitoredCategoryTooltip}>
-          <div className="flex-shrink-0 self-end sm:self-center font-mono text-[11px] text-slate-400 bg-[#1E1F22] px-3 py-1.5 rounded-lg border border-slate-700 cursor-help">
-            {t.safetyBanner.monitoredCategory}
-          </div>
-        </Tooltip>
+        {/* Reference info: kept quiet, right aligned */}
+        <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-1 px-3 py-2 border-t md:border-t-0 md:border-l border-hmi-line text-[11px] text-hmi-faint">
+          <Tooltip content={t.safetyBanner.latchedNotice} position="bottom">
+            <span className="cursor-help underline decoration-dotted underline-offset-2">ISO 13849-1 latch</span>
+          </Tooltip>
+          <Tooltip content={t.safetyBanner.monitoredCategoryTooltip} position="bottom">
+            <span className="cursor-help num">{t.safetyBanner.monitoredCategory}</span>
+          </Tooltip>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };

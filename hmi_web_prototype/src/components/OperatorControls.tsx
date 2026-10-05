@@ -1,5 +1,4 @@
 import React from 'react';
-import { Power, RotateCcw, Sliders, XCircle } from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
 import { Tooltip } from './Tooltip';
 
@@ -36,65 +35,50 @@ export const OperatorControls: React.FC<OperatorControlsProps> = ({
     return t.controls.resetTooltipNotNeeded;
   };
 
+  // Buttons are grey and identical in form; availability is shown by the enabled state,
+  // and the disabled reason is one hover away. RESET gets an orange edge only when an
+  // alarm is waiting on it, which ties the button to the alarm in the banner.
+  const buttons: {
+    action: 'START' | 'STOP' | 'RESET';
+    label: string;
+    enabled: boolean;
+    tooltip: string;
+    cue?: string;
+  }[] = [
+    { action: 'START', label: t.controls.start, enabled: canStart, tooltip: getStartTooltip() },
+    { action: 'STOP', label: t.controls.stop, enabled: canStop, tooltip: getStopTooltip() },
+    {
+      action: 'RESET',
+      label: t.controls.reset,
+      enabled: canClear,
+      tooltip: getResetTooltip(),
+      cue: canClear ? 'border-l-[6px] border-l-p2' : '',
+    },
+  ];
+
   return (
-    <div className="bg-[#2B2D30] border border-[#3E4247] rounded-xl p-5 shadow-lg space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-sky-400" />
-          {t.controls.title}
-        </h3>
-        <span className="text-[11px] text-slate-400 font-mono">2-Step Interlocked</span>
+    <section className="panel">
+      <div className="panel-head">
+        <span>{t.controls.title}</span>
+        <span className="panel-meta">hold 1.5 s to confirm</span>
       </div>
 
-      <div className="space-y-3">
-        {/* START Button */}
-        <Tooltip content={getStartTooltip()} position="top" className="w-full">
-          <button
-            disabled={!canStart}
-            onClick={() => onSelectAction('START')}
-            className={`w-full min-h-[56px] rounded-xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-150 shadow-md ${
-              canStart
-                ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer active:scale-98 shadow-emerald-900/30'
-                : 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed opacity-60'
-            }`}
-          >
-            <Power className="w-5 h-5" />
-            <span>{t.controls.start}</span>
-          </button>
-        </Tooltip>
-
-        {/* STOP Button */}
-        <Tooltip content={getStopTooltip()} position="top" className="w-full">
-          <button
-            disabled={!canStop}
-            onClick={() => onSelectAction('STOP')}
-            className={`w-full min-h-[56px] rounded-xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-150 shadow-md ${
-              canStop
-                ? 'bg-amber-600 hover:bg-amber-500 text-white cursor-pointer active:scale-98 shadow-amber-900/30'
-                : 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed opacity-60'
-            }`}
-          >
-            <XCircle className="w-5 h-5" />
-            <span>{t.controls.stop}</span>
-          </button>
-        </Tooltip>
-
-        {/* RESET / CLEAR FAULT Button */}
-        <Tooltip content={getResetTooltip()} position="top" className="w-full">
-          <button
-            disabled={!canClear}
-            onClick={() => onSelectAction('RESET')}
-            className={`w-full min-h-[56px] rounded-xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-150 shadow-md ${
-              canClear
-                ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer active:scale-98 animate-pulse shadow-rose-900/30'
-                : 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed opacity-60'
-            }`}
-          >
-            <RotateCcw className="w-5 h-5" />
-            <span>{t.controls.reset}</span>
-          </button>
-        </Tooltip>
+      <div className="p-3 space-y-2">
+        {buttons.map((b) => (
+          <Tooltip key={b.action} content={b.tooltip} position="left" className="w-full">
+            <button
+              disabled={!b.enabled}
+              onClick={() => onSelectAction(b.action)}
+              className={`btn w-full min-h-[52px] px-4 flex items-center justify-between text-[15px] font-semibold ${b.cue ?? ''}`}
+            >
+              <span>{b.label}</span>
+              <span className="num text-[11px] font-normal text-hmi-faint">
+                {b.enabled ? '' : physicalEstop && b.action === 'RESET' ? 'LOCKED' : '—'}
+              </span>
+            </button>
+          </Tooltip>
+        ))}
       </div>
-    </div>
+    </section>
   );
 };

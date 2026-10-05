@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AlertTriangle, Lock } from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
 
 interface ConfirmationModalProps {
@@ -67,75 +66,58 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#2B2D30] border border-[#3E4247] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-            <AlertTriangle className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">
-              {t.modal.title}
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              {t.modal.subtitle}
-            </p>
-          </div>
+    <div className="fixed inset-0 bg-black/45 z-50 flex items-center justify-center p-4">
+      <div role="dialog" aria-modal="true" className="panel w-full max-w-md shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
+        <div className="flex items-center justify-between px-3 py-2 bg-hmi-head text-white text-[13px] font-semibold">
+          <span>{t.modal.title}</span>
+          <span className="num text-[11px] font-normal text-white/70">ST{stationId.toString().padStart(2, '0')}</span>
         </div>
 
-        <div className="bg-[#1E1F22] rounded-xl p-4 border border-slate-700/80 space-y-2.5 text-xs">
-          <div className="flex justify-between items-center text-slate-400">
-            <span>{t.modal.actionLabel}</span>
-            <span className="font-bold text-white text-sm bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
-              {getActionLabel()}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-slate-400">
-            <span>{t.modal.targetStation}</span>
-            <span className="text-slate-300 font-mono">Station #{stationId.toString().padStart(2, '0')}</span>
-          </div>
-          <div className="text-slate-300 border-t border-slate-800 pt-2.5 space-y-1">
-            <div className="flex items-center gap-1.5">
-              <span>⚠️</span>
+        <div className="p-4 space-y-4">
+          <p className="text-[12px] text-hmi-dim">{t.modal.subtitle}</p>
+
+          <dl className="well grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 px-3 py-2.5 text-[13px]">
+            <dt className="text-hmi-faint">{t.modal.actionLabel}</dt>
+            <dd className="font-bold text-hmi-ink">{getActionLabel()}</dd>
+            <dt className="text-hmi-faint">{t.modal.targetStation}</dt>
+            <dd className="num text-hmi-ink">Station {stationId.toString().padStart(2, '0')}</dd>
+          </dl>
+
+          <ol className="space-y-1.5 text-[12px] text-hmi-ink">
+            <li className="flex gap-2">
+              <span className="num text-hmi-faint">1.</span>
               <span>{t.modal.safetyCheck1}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-slate-400">
-              <span>🔒</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="num text-hmi-faint">2.</span>
               <span>{t.modal.safetyCheck2}</span>
-            </div>
-          </div>
-        </div>
+            </li>
+          </ol>
 
-        {/* 1.5s Long-Press Confirmation Button */}
-        <div className="space-y-3">
+          {/* Hold-to-confirm: the fill shows how far along the 1.5 s hold is */}
           <button
             onMouseDown={handleStartHold}
             onMouseUp={handleEndHold}
             onTouchStart={handleStartHold}
             onTouchEnd={handleEndHold}
-            className="relative w-full h-14 bg-slate-700 hover:bg-slate-650 rounded-xl overflow-hidden font-bold text-white flex items-center justify-center transition-all select-none cursor-pointer active:scale-98 shadow-lg border border-slate-600"
+            className="btn relative w-full h-12 overflow-hidden text-[14px] font-semibold select-none"
           >
-            {/* Progress bar filling up */}
-            <div
-              className="absolute left-0 top-0 bottom-0 bg-emerald-600 transition-all duration-75 ease-linear"
+            <span
+              className="absolute left-0 top-0 bottom-0 bg-sel"
               style={{ width: `${pressProgress}%` }}
             />
-            <span className="relative z-10 flex items-center gap-2">
-              <Lock className="w-4 h-4" />
-              <span>
-                {pressProgress > 0
-                  ? `${t.modal.holdingMsg} (${Math.round(pressProgress)}%)`
-                  : t.modal.holdPrompt}
-              </span>
+            <span className={`relative z-10 ${pressProgress > 50 ? 'text-white' : ''}`}>
+              {pressProgress > 0
+                ? `${t.modal.holdingMsg} ${Math.round(pressProgress)}%`
+                : t.modal.holdPrompt}
             </span>
           </button>
 
-          <button
-            onClick={onClose}
-            className="w-full py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
-          >
-            {t.modal.cancelBtn}
-          </button>
+          <div className="flex justify-end">
+            <button onClick={onClose} className="btn px-4 py-1.5 text-[13px]">
+              {t.modal.cancelBtn}
+            </button>
+          </div>
         </div>
       </div>
     </div>

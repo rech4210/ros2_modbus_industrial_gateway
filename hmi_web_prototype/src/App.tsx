@@ -1,13 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Activity,
-  Clock,
-  Globe,
-  Radio,
-  Sliders,
-  Wrench,
-  ShieldCheck,
-} from 'lucide-react';
 import { I18nProvider, useI18n } from './context/I18nContext';
 import { TopSafetyBanner } from './components/TopSafetyBanner';
 import { MachineStateBadge } from './components/MachineStateBadge';
@@ -134,99 +125,70 @@ function DashboardContent() {
     });
   };
 
-  return (
-    <div
-      className={`min-h-screen p-4 md:p-6 transition-all duration-300 ${
-        vm.physicalEstop
-          ? 'ring-8 ring-red-600/70 ring-inset shadow-[inset_0_0_60px_rgba(220,38,38,0.3)]'
-          : vm.isAlarm
-          ? 'ring-4 ring-amber-600/50 ring-inset'
-          : ''
+  const lang = (code: 'KO' | 'EN') => (
+    <button
+      onClick={() => setLanguage(code)}
+      aria-pressed={language === code}
+      className={`px-2 py-0.5 text-[11px] font-semibold ${
+        language === code ? 'bg-white text-hmi-ink' : 'text-white/70 hover:text-white'
       }`}
     >
-      <div className="max-w-7xl mx-auto space-y-5">
-        {/* ================================================================= */}
-        {/* Top Header Bar */}
-        {/* ================================================================= */}
-        <header className="bg-[#2B2D30] border border-[#3E4247] rounded-xl px-5 py-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-700/60 border border-slate-600 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-sky-400" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-white tracking-wide">
-                  {t.header.title}
-                </h1>
-                <span className="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-mono font-semibold">
-                  Station #{vm.stationId.toString().padStart(2, '0')}
-                </span>
-              </div>
-              <p className="text-xs text-slate-400">
-                {t.header.subTitle}
-              </p>
-            </div>
+      {code}
+    </button>
+  );
+
+  // Abnormal states draw a single colored frame around the whole screen; normal operation has none.
+  const frame = vm.physicalEstop
+    ? 'border-[6px] border-p1'
+    : vm.isAlarm
+    ? 'border-[6px] border-p2'
+    : 'border-[6px] border-transparent';
+
+  return (
+    <div className={`min-h-screen ${frame}`}>
+      {/* Title bar */}
+      <header className="bg-hmi-head text-white">
+        <div className="max-w-7xl mx-auto px-3 md:px-4 py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <div className="flex items-baseline gap-3 min-w-0">
+            <h1 className="text-[15px] font-semibold truncate">{t.header.title}</h1>
+            <span className="num text-[12px] text-white/70">
+              ST{vm.stationId.toString().padStart(2, '0')}
+            </span>
+            <span className="hidden md:inline text-[12px] text-white/60 truncate">{t.header.subTitle}</span>
           </div>
 
-          {/* Quick Metrics & Controls Header Right */}
-          <div className="flex items-center flex-wrap gap-3 text-xs font-mono">
-            <div className="flex items-center gap-1.5 bg-[#1E1F22] px-3 py-1.5 rounded-lg border border-[#3E4247]">
-              <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span className="text-slate-400">{t.header.ddsBus}</span>
-              <span className="text-emerald-400 font-semibold">{vm.busFreqHz.toFixed(1)} Hz</span>
-            </div>
+          <div className="flex items-center flex-wrap gap-x-4 gap-y-1 num text-[12px]">
+            <span className="text-white/60">
+              {t.header.ddsBus} <span className="text-white">{vm.busFreqHz.toFixed(1)} Hz</span>
+            </span>
+            <span className="text-white/60">
+              {t.header.heartbeat} <span className="text-white inline-block min-w-[3.5rem]">{vm.heartbeat}</span>
+            </span>
 
-            <div className="flex items-center gap-1.5 bg-[#1E1F22] px-3 py-1.5 rounded-lg border border-[#3E4247]">
-              <Clock className="w-3.5 h-3.5 text-sky-400" />
-              <span className="text-slate-400">{t.header.heartbeat}</span>
-              <span className="text-white font-semibold">{vm.heartbeat}</span>
-            </div>
-
-            {/* Test Bench Toggle Button */}
-            <Tooltip content={t.header.testBenchToggle}>
+            <Tooltip content={t.header.testBenchToggle} position="bottom">
               <button
                 onClick={() => setShowTestBench(!showTestBench)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-colors ${
+                aria-pressed={showTestBench}
+                className={`px-2 py-0.5 border text-[11px] font-sans ${
                   showTestBench
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-                    : 'bg-[#1E1F22] text-slate-400 border-slate-700 hover:bg-slate-750'
+                    ? 'bg-white text-hmi-ink border-white'
+                    : 'border-white/40 text-white/80 hover:text-white'
                 }`}
               >
-                <Wrench className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Test Bench</span>
+                Test Bench
               </button>
             </Tooltip>
 
-            {/* Dynamic i18n Language Switcher: KO | EN */}
-            <div className="flex items-center bg-[#1E1F22] p-1 rounded-lg border border-slate-700">
-              <Globe className="w-3.5 h-3.5 text-slate-400 ml-1.5 mr-1" />
-              <button
-                onClick={() => setLanguage('KO')}
-                className={`px-2 py-0.5 rounded text-xs font-bold transition-colors ${
-                  language === 'KO'
-                    ? 'bg-sky-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                KO
-              </button>
-              <button
-                onClick={() => setLanguage('EN')}
-                className={`px-2 py-0.5 rounded text-xs font-bold transition-colors ${
-                  language === 'EN'
-                    ? 'bg-sky-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                EN
-              </button>
+            <div className="flex border border-white/40 font-sans" role="group" aria-label="Language">
+              {lang('KO')}
+              {lang('EN')}
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* ================================================================= */}
-        {/* Level 1: Top Safety Banner (E-Stop / Latched Alarms) */}
-        {/* ================================================================= */}
+      <main className="max-w-7xl mx-auto p-3 md:p-4 space-y-3">
+        {/* Level 1: alarm summary and recovery steps */}
         <TopSafetyBanner
           isAlarm={vm.isAlarm}
           physicalEstop={vm.physicalEstop}
@@ -235,13 +197,9 @@ function DashboardContent() {
           guideMsg={vm.alarmGuideMsg}
         />
 
-        {/* ================================================================= */}
-        {/* Level 2 & 3: Primary Machine State, Monitoring & Controls */}
-        {/* ================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Left Column (2 Cols): Machine State, Sensor Gauge, Setpoint, QoS */}
-          <div className="lg:col-span-2 space-y-5">
-            {/* 1-Second Primary Machine State Badge */}
+        {/* Level 2: unit state, process value and setpoint (left); operator actions (right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <div className="lg:col-span-2 space-y-3">
             <MachineStateBadge
               statusText={vm.statusText}
               statusColor={vm.statusColor}
@@ -253,21 +211,19 @@ function DashboardContent() {
               stationId={vm.stationId}
             />
 
-            {/* In-Range Analog Bar (0~1000 with 400~600 Band) */}
             <ProcessSensorGauge
               sensorVal={vm.sensorVal}
               sensorPct={vm.sensorPct}
               isInRange={vm.isInRange}
             />
 
-            {/* Setpoint Control Card */}
             <SetpointControl
               currentSetpoint={vm.setpointVal}
               onApplySetpoint={handleApplySetpoint}
               disabled={vm.physicalEstop}
             />
 
-            {/* Network QoS Telemetry Card */}
+            {/* Level 3: communication diagnostics */}
             <CommHealthMetrics
               rttMs={vm.rttMs}
               jitterMs={vm.jitterMs}
@@ -280,9 +236,7 @@ function DashboardContent() {
             />
           </div>
 
-          {/* Right Column (1 Col): Operator Controls & System Info */}
-          <div className="space-y-5">
-            {/* Operator Control Panel (START, STOP, RESET) */}
+          <div className="space-y-3">
             <OperatorControls
               canStart={vm.canStart}
               canStop={vm.canStop}
@@ -292,55 +246,35 @@ function DashboardContent() {
               onSelectAction={handleOpenActionModal}
             />
 
-            {/* Telemetry Summary & Architecture Details Card */}
-            <div className="bg-[#2B2D30] border border-[#3E4247] rounded-xl p-5 shadow-lg space-y-3 font-mono text-xs">
-              <div className="flex items-center justify-between border-b border-slate-700/60 pb-2">
-                <span className="font-bold text-slate-300 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  {t.systemArch.title}
-                </span>
-                <span className="text-[10px] text-slate-500">{t.systemArch.specBadge}</span>
+            {/* Level 4: static configuration reference */}
+            <section className="panel">
+              <div className="panel-head">
+                <span>{t.systemArch.title}</span>
+                <span className="panel-meta">{t.systemArch.specBadge}</span>
               </div>
-
-              <div className="space-y-2 text-slate-400">
-                <div className="flex justify-between">
-                  <span>{t.systemArch.modbusTransport}</span>
-                  <span className="text-white font-semibold">TCP / Port 5020</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.functionCode}</span>
-                  <span className="text-white font-semibold">FC03 (Bulk Read 6HR)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.controlCoils}</span>
-                  <span className="text-white font-semibold">FC05 (Run/Reset)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.setpointRegister}</span>
-                  <span className="text-white font-semibold">FC06 (HR Offset 3)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.slaRttTarget}</span>
-                  <span className="text-emerald-400 font-semibold">&lt; 5.0 ms</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.slaJitterTarget}</span>
-                  <span className="text-emerald-400 font-semibold">&lt; 2.0 ms</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t.systemArch.activeErrorCode}</span>
-                  <span className={vm.errorCode === 0 ? "text-slate-300" : "text-amber-400 font-bold"}>
-                    {vm.errorCode} ({vm.errorCodeText})
-                  </span>
-                </div>
-              </div>
-            </div>
+              <dl className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 px-3 py-2 text-[12px]">
+                <dt className="text-hmi-faint">{t.systemArch.modbusTransport}</dt>
+                <dd className="num text-hmi-dim text-right">TCP / 5020</dd>
+                <dt className="text-hmi-faint">{t.systemArch.functionCode}</dt>
+                <dd className="num text-hmi-dim text-right">FC03 · 6 HR</dd>
+                <dt className="text-hmi-faint">{t.systemArch.controlCoils}</dt>
+                <dd className="num text-hmi-dim text-right">FC05 · Run/Reset</dd>
+                <dt className="text-hmi-faint">{t.systemArch.setpointRegister}</dt>
+                <dd className="num text-hmi-dim text-right">FC06 · HR[3]</dd>
+                <dt className="text-hmi-faint">{t.systemArch.slaRttTarget}</dt>
+                <dd className="num text-hmi-dim text-right">&lt; 5.0 ms</dd>
+                <dt className="text-hmi-faint">{t.systemArch.slaJitterTarget}</dt>
+                <dd className="num text-hmi-dim text-right">&lt; 2.0 ms</dd>
+                <dt className="text-hmi-faint">{t.systemArch.activeErrorCode}</dt>
+                <dd className={`num text-right ${vm.errorCode === 0 ? 'text-hmi-dim' : 'text-hmi-ink font-bold'}`}>
+                  {vm.errorCode} ({vm.errorCodeText})
+                </dd>
+              </dl>
+            </section>
           </div>
         </div>
 
-        {/* ================================================================= */}
-        {/* Dedicated Test Bench: Tier 1 & Tier 2 Diagnostic Panel */}
-        {/* ================================================================= */}
+        {/* Engineering test bench (hidden from operators via the title-bar toggle) */}
         {showTestBench && (
           <TestBench
             currentFaultMode={faultMode}
@@ -354,9 +288,8 @@ function DashboardContent() {
             lastTestOutcome={lastTestOutcome}
           />
         )}
-      </div>
+      </main>
 
-      {/* 2-Step Long-Press Confirmation Modal */}
       <ConfirmationModal
         isOpen={modalOpen}
         action={pendingAction}

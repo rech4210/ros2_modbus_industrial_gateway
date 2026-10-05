@@ -158,14 +158,14 @@ WSL2 Docker의 가상 PLC 환경에서 유효 표본 3,000개를 60.04초 동안
 
 ## HMI와 시연
 
-![웹 HMI 실행 화면](docs/assets/hmi_bolt_preview.png)
+[![웹 HMI 실행 화면 — 클릭하면 시연 영상 재생](docs/assets/hmi_bolt_preview.png)](https://youtu.be/QYs8bFcEs4c)
 
 상태, 공정값, 통신 지표와 운영 버튼을 함께 보여 주는 화면입니다. ISA-101의 상황 인식 설계 원칙(회색 바탕, 경보에만 색 사용, 색·모양·번호로 경보 순위 구분)을 참고했습니다. 이미지는 Mock 어댑터로 실행한 정상 상태 화면이며, 사용성 시험이나 표준 적합성 결과는 아닙니다.
 
 <details>
 <summary><b>HMI 조작 및 장애 주입 시연</b></summary>
 
-![HMI 시연 영상](docs/assets/hmi-demo-captioned.mp4)
+[▶ HMI 조작 및 장애·복구 시연 영상 보기 · 2분 9초](https://youtu.be/QYs8bFcEs4c)
 
 | 순서 | 화면에서 수행할 작업 | 확인할 결과·자막 내용 |
 |:---|:---|:---|

@@ -1,56 +1,54 @@
-# 🚀 ROS 2 Industrial Gateway HMI Prototype (for bolt.new)
+# HMI 웹 프런트엔드
 
-이 폴더는 **[bolt.new](https://bolt.new)**에 그대로 복사하여 브라우저에서 즉시 인터랙티브하게 체험할 수 있도록 제작된 **ISA-101 기반 고성능 산업용 HMI 프로토타입**입니다.
+게이트웨이 상태를 보여 주고 기동·정지·이상 해제를 보내는 운전 화면입니다. React + TypeScript + Vite로 만들었고, 빌드 결과(`dist/`)를 `hmi.bridge_server`(FastAPI)가 `/`에서 서빙합니다.
 
----
+![HMI 화면](../docs/assets/hmi_bolt_preview.png)
 
-## 🛠️ bolt.new에서 사용하는 2가지 방법
+처음에는 bolt.new로 만든 프로토타입이었고, 지금은 ISA-101 원칙(회색 바탕, 경보에만 색 사용, 색·모양·번호로 경보 순위 구분)에 맞춘 화면입니다. 설계 배경은 [HMI 설계 문서](../docs/hmi/HMI_DESIGN_AND_IMPLEMENTATION_PLAN.md), 백엔드는 [hmi/README.md](../hmi/README.md)를 참고하세요.
 
-### 방법 A: bolt.new 프롬프트 창에 바로 붙여넣기 (가장 빠름)
-bolt.new 메인 화면의 채팅창에 아래 문구를 그대로 복사해서 붙여넣으세요:
+## 실행
 
-```markdown
-Create an ISA-101 High-Performance Industrial HMI for a ROS 2 Modbus-TCP Edge Gateway with the following specifications:
-1. Dark Slate ISA-101 Theme:
-   - Background #1E1F22, Card panels #2B2D30, borders #3E4247, text #CFD8DC.
-   - Muted Palette: Silence means normal. Color is strictly reserved for abnormalities.
-   - Full-window flashing red border during active alarms/E-Stop.
-2. 1-Second Situational Awareness:
-   - Station Status Badge: "[설비 정상 가동 중 (RUNNING)]" (muted green), "[운전 준비 완료 (READY)]" (slate blue), "[비상 정지 (PHYSICAL E-STOP)]" (red).
-   - In-Range Analog Bar: 0 to 1000 scale with a clearly shaded "Normal Operating Band (400 to 600)" and an animated pointer indicating current value (e.g. 520, 52.0%).
-   - QoS Telemetry: Modbus FC03 Read RTT (0.42 ms), Polling Jitter (0.01 ms), Heartbeat counter.
-3. 2-Step Safety Interlock:
-   - START and RESET buttons trigger a safety confirmation modal.
-   - Modal requires a 1.5-second Long-Press (filling progress bar) to execute actions.
-4. Interactive Fault Simulator Panel:
-   - Buttons to toggle [NORMAL], [DROP 3x], [DISCONNECT], [PHYSICAL E-STOP].
-   - When E-Stop is active, lock the Clear Fault button and display guidance: "Please physically reset the hardware E-Stop first".
-   - When E-Stop is cleared, allow Reset to restore normal running.
-5. Simulated 50Hz Background Engine:
-   - Internal state updates at 50Hz (every 20ms) and UI rendering is throttled/decimated to 10Hz (every 100ms).
+```bash
+cd hmi_web_prototype
+npm ci
+npm run dev        # http://localhost:3000 (WebSocket은 같은 호스트의 /ws)
+npm run build      # 타입 검사 후 dist/ 생성
 ```
 
----
+화면 확인만 할 때는 저장소 루트에서 Mock 어댑터로 서버를 띄웁니다. 빌드한 `dist/`를 그대로 서빙합니다.
 
-### 방법 B: 코드 파일 직접 복사
-`hmi_web_prototype/` 안의 파일들을 bolt.new 프로젝트 트리에 그대로 붙여넣으시면 됩니다:
-* `package.json`
-* `index.html`
-* `src/types.ts`
-* `src/App.tsx`
-* `src/main.tsx`
+```bash
+python -m hmi.run --host 127.0.0.1 --port 8000 --adapter mock
+# http://localhost:8000
+```
 
----
+서버에 연결되지 않으면 프런트엔드가 자체 시뮬레이션으로 대체됩니다(`src/services/api.ts`). 연결이 되면 시뮬레이션은 멈춥니다.
 
-## 🎮 구현된 인터랙티브 체험 기능
+## 화면 구성
 
-1. **1초 상황 인지 (1-Second Awareness):**
-   * 상단 상태 캡슐 배지만 보고도 설비의 정상/대기/비상 여부를 1초 만에 파악.
-   * 아날로그 바에서 바늘이 음영 밴드(400~600) 안에 안착해 있는 모습을 시각적으로 즉시 확인.
-2. **QoS 결정론적 품질 실시간 계측:**
-   * 게이트웨이의 Modbus FC03 RTT(0.42ms)와 주기 지터(0.01ms) 표시.
-3. **2-Step 안전 인터록 (롱프레스 확인):**
-   * `[설비 기동 (START)]` 또는 `[이상 해제 (Clear Fault)]` 클릭 시 팝업이 뜨며, 버튼을 1.5초간 꾹 눌러야만 게이지가 차오르며 실행됨.
-4. **하단 결함 시뮬레이터 (Fault Testing Drawer):**
-   * `[물리 비상정지 (E-STOP)]` 클릭 시 화면 전체 테두리가 붉은색으로 점멸하며 긴급 복구 가이드 배너 출력.
-   * 물리 비상정지 중에는 리셋 버튼이 자동으로 잠기며, 하드웨어 복구 후에만 래치 해제 가능.
+| 영역 | 파일 | 내용 |
+|---|---|---|
+| 제목줄 | `src/App.tsx` | 스테이션, DDS 주기, heartbeat, `Test Bench` 토글, `KO / EN` |
+| 경보 요약 | `components/TopSafetyBanner.tsx` | 활성 경보와 원인, 복구 1·2단계 |
+| 설비 상태 | `components/MachineStateBadge.tsx` | 운전 중 / 준비 / 대기 / 이상 / 비상정지 |
+| 공정값 PV | `components/ProcessSensorGauge.tsx` | 0–1000 막대, 400–600 정상 대역 |
+| 설정값 SP | `components/SetpointControl.tsx` | 슬라이더, 숫자 입력, 프리셋, 적용 |
+| 통신 상태 | `components/CommHealthMetrics.tsx` | RTT, 지터, heartbeat, 링크 |
+| 조작 | `components/OperatorControls.tsx` | 기동 / 정지 / 이상 해제 |
+| 확인 창 | `components/ConfirmationModal.tsx` | 1.5초 길게 눌러 승인 |
+| 시험 패널 | `components/TestBench.tsx` | 비상정지·공정 결함 주입, 설정값 경계 시험, 통신 결함 시나리오 |
+| 경보 표시 | `components/AlarmMarker.tsx` | 순위별 모양·색·번호 마커 |
+| 문구 | `src/locales/ko.ts`, `en.ts`, `types.ts` | 한/영 사전(키 구조는 두 파일이 같아야 함) |
+
+## 디자인 규칙
+
+- 색은 `index.html`의 Tailwind 설정(`hmi.*`, `p1`, `p2`, `p3`, `sel`)에서만 정의합니다. 컴포넌트에서 임의의 색 값을 쓰지 않습니다.
+- 정상 상태에는 색을 쓰지 않습니다. 경보 색(빨강·주황·노랑)은 경보 마커, 경보 띠, 화면 테두리에만 씁니다.
+- 경보와 상태는 색과 함께 모양·글자로도 표시합니다.
+- 깜빡임, 번짐, 바운스 효과와 이모지를 쓰지 않습니다.
+- 문구를 추가하면 `ko.ts`, `en.ts`, `types.ts`를 함께 고칩니다. `tests/test_hmi.py::test_locale_dictionary_integrity`가 구조를 검사합니다.
+
+## 참고
+
+- Tailwind는 CDN 스크립트(`index.html`)로 불러오므로 화면을 보려면 인터넷 연결이 필요합니다. 폐쇄망에 배포하려면 Tailwind를 빌드 단계로 옮겨야 합니다.
+- 폰트(Pretendard)도 CDN에서 불러오며, 실패하면 시스템 폰트로 대체됩니다.

@@ -1,4 +1,4 @@
-# 🖥️ ROS 2 Modbus Industrial Gateway - HMI System
+# ROS 2 Modbus Industrial Gateway - HMI System
 
 Production-ready, ISA-101 Situational Awareness HMI System with cross-platform OS portability (Linux Docker edge environments and Windows).
 
@@ -14,20 +14,27 @@ Production-ready, ISA-101 Situational Awareness HMI System with cross-platform O
 
 ## 2. UI/UX Specifications (ISA-101 Situational Awareness)
 
-- **1-Second Situational Awareness:** Calm neutral slate palette (`#1E1F22`, `#2B2D30`, `#3E4247`). Color is reserved exclusively for abnormal events (Red for E-Stop, Amber for Alarm/Warning, Green only for nominal running).
-- **Visual Hierarchy:**
-  1. **Top Safety Banner:** Latched Alarms, E-Stop alert, and 2-step actionable operator recovery guide (Step 1: Release physical button -> Step 2: HMI software reset).
-  2. **Primary Machine State:** 1-second situational awareness badge (READY, RUNNING, PHYSICAL E-STOP, COMM FAULT, IDLE).
-  3. **Process Variable & Setpoint Control:**
-     - ISA-101 In-Range Analog Bar (0~1000 scale, shaded 400~600 normal band, needle pointer).
-     - Setpoint Control Card with slider, numeric input, presets (0, 400, 500, 600, 1000), and boundary range validation.
-  4. **Modbus/ROS Comm Health Metrics:** FC03 Read RTT (<5ms SLA), Polling Jitter (<2ms SLA), Heartbeat counter, Link state, DDS Bus frequency.
-  5. **Dynamic i18n Language Toggle:** `[ KO | EN ]` toggle switch with instant translation for all labels, tooltips, alarm causes, and error codes.
-  6. **Context-Aware Tooltips:** Hover tooltips across all interactive controls, data fields, and disabled buttons explaining operational reasons.
+![HMI screen](../docs/assets/hmi_bolt_preview.png)
+
+- **Grey-scale by default:** Mid-grey background (`#CDCDCD`) and grey panels. Normal operation carries no color. Saturated color is reserved for alarm priority: red `#C80000` (priority 1, E-Stop), orange `#D97500` (priority 2, safety alarm / fault / out of range), yellow `#C9A800` (priority 3, marker defined, no trigger yet). Blue `#1F4E9C` marks only the value being edited or the selected option.
+- **Not color alone:** Alarm priority is shown by color, shape and number together (red square 1, orange triangle 2, yellow diamond 3). Machine state is told apart by shape and text: solid square = running, hollow square = ready, dashed square = idle.
+- **No decorative motion:** No blinking, glow, bounce or emoji. An abnormal state draws a static colored frame around the screen.
+- **Visual hierarchy (top to bottom):**
+  1. **Alarm summary:** active alarm or "no active alarms", cause, and the 2-step recovery guide (Step 1: release the physical E-Stop, Step 2: HMI reset). The finished step is struck through.
+  2. **Unit state:** RUNNING / READY / IDLE / FAULT (latched) / E-STOP.
+  3. **Process value (PV) and setpoint (SP):**
+     - Analog bar (0-1000 scale, grey 400-600 normal band, pointer, band bracket below the scale).
+     - Setpoint slider, numeric input, presets (0, 400, 500, 600, 1000) and range validation. The new value turns blue only while it differs from the live setpoint.
+  4. **Communication:** FC03 round trip (< 5 ms), polling jitter (< 2 ms), PLC heartbeat, link state, DDS frequency, failure counters. A row gets an orange marker only when it leaves its limit.
+  5. **Operation:** START / STOP / RESET, all grey. RESET gets an orange edge only while an alarm waits for it, and shows `LOCKED` while the E-Stop is pressed. Every action needs a 1.5 s hold in the confirmation dialog.
+  6. **Configuration:** static transport, function codes and limits.
+- **Language toggle:** `KO | EN` in the title bar switches all labels, tooltips, alarm causes and error codes.
+- **Tooltips:** Hover or focus on data labels and buttons, including the reason a button is disabled.
+- **Presentation hints from the server:** `statusColor` and `statusBadgeBg` are still sent in the `presentation` payload, but the frontend does not use them. The state is rendered from `physicalEstop`, `isAlarm`, `canStart` and `canStop`.
 
 ## 3. Engineering Test Bench (Tier 1 & Tier 2)
 
-Dedicated diagnostic panel with clear demarcation of safety boundaries:
+Dedicated diagnostic panel, shown or hidden with the `Test Bench` button in the title bar. It is fenced off with a hatched border and a dark title bar so it is never mistaken for the operator screen:
 - **Tier 1 (Real-Time Inline Injection):**
   - Hardware E-Stop toggle (assert/release)
   - Process Fault toggle

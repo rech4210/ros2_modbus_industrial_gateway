@@ -1,0 +1,17 @@
+scenario_id,scenario_name,fault_mode,t_inject_ns,t_alarm_ns,latency_ms,sla_pass,status,notes
+1,정상 START → STOP,NORMAL,,,N/A,True,PASS,명령 CONFIRMED 및 running 플래그 전이 일치
+2,SETPOINT 경계값,NORMAL,,,N/A,True,PASS,"0/1000 수락, 1001 초과값 INVALID_ARGUMENT(1) 거부"
+3,알람 래치 중 제어 시도,NORMAL (LATCHED),,,N/A,True,PASS,알람 활성 중 START 요청 쓰기 차단 및 ALARM_ACTIVE(5) 즉시 거부
+4,동시 서비스 호출,NORMAL,,,N/A,True,PASS,"단일 명령 슬롯 경합 방어, Command executed successfully / Command slot occupied"
+5,패킷 DROP 주입,DROP,248231505230,248325692347,94.19,True,PASS,3회 연속 실패 확정 후 알람 발행 (지연: 94.19ms)
+6,TCP DISCONNECT 주입,DISCONNECT,248485902587,248487140048,1.24,True,PASS,소켓 EOF/RST 감지 즉시 COMM_FAULT 알람 (지연: 1.24ms)
+7,지속적 응답 DELAY 200ms,DELAY,248765583635,248843452741,77.87,True,PASS,25ms 타임아웃 3회 누적(75ms) 감지 알람 (지연: 77.87ms)
+8,PLC FREEZE 주입,FREEZE,249006643168,249088746302,82.10,True,PASS,FC03 응답 수신 중 80ms Heartbeat 정체 감지 HEARTBEAT_STALE(15) (지연: 82.10ms)
+9,패킷 MALFORMED 주입,MALFORMED,,,N/A,True,PASS,"변조 응답 PROTOCOL_ERROR 감지, 표본 기각 및 소켓 재연결 방어"
+10,패킷 1회 DROP,DROP_ONE,,,N/A,True,PASS,"1회 패킷 유실 시 consecutive_failures=1 누적 후 다음 주기 회복, 알람 미발생"
+11,쓰기 ACK 유실,DROP,,,N/A,True,PASS,쓰기 중 단절 시 자동 재전송 금지 및 UNKNOWN 거부 회신 (Write register timed out after 25ms)
+12,NORMAL 복구,NORMAL,,,N/A,True,PASS,2초 이내 소켓 재연결 및 50Hz data_valid=true 회복 확인
+13,통신 복구 후 래치 확인,NORMAL,,,N/A,True,PASS,통신은 복구되었으나 알람 래치 유지(alarm_active=true) 및 운전 금지 (ALARM_ACTIVE=5)
+14,1-shot ClearFault 호출,NORMAL,,,N/A,True,PASS,1회 리셋 서비스 호출로 alarm_active=false 및 제어권 즉시 복귀 (MTTR 극소화)
+15,늦게 연결된 구독자,NORMAL,,,N/A,True,PASS,Transient Local QoS로 신규 구독자가 최신 알람 상태 1회 즉시 수신
+16,게이트웨이 자체 Watchdog,NORMAL,,,N/A,True,PASS,상위 제어기 100ms 수신 타임아웃 만료 시 Controlled Deceleration Stop 자율 발동

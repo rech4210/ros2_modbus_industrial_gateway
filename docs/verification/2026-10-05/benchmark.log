@@ -1,0 +1,51 @@
+
+============================================================================
+ ⏱️ Step 10: 1,000회 정량 지연 측정 및 통계 벤치마크 (Target: 3000 samples)
+============================================================================
+[INFO] Resetting PLC and clearing alarm latch...
+[INFO] System operational and alarms cleared.
+[INFO] Monitoring gateway node PID: 611...
+[INFO] Sampling 50Hz (20ms) status stream from /plc/state...
+  ... Collected 101/3000 samples (3.4%)
+  ... Collected 202/3000 samples (6.7%)
+  ... Collected 302/3000 samples (10.1%)
+  ... Collected 402/3000 samples (13.4%)
+  ... Collected 502/3000 samples (16.7%)
+  ... Collected 600/3000 samples (20.0%)
+  ... Collected 701/3000 samples (23.4%)
+  ... Collected 801/3000 samples (26.7%)
+  ... Collected 901/3000 samples (30.0%)
+  ... Collected 1002/3000 samples (33.4%)
+  ... Collected 1102/3000 samples (36.7%)
+  ... Collected 1202/3000 samples (40.1%)
+  ... Collected 1302/3000 samples (43.4%)
+  ... Collected 1403/3000 samples (46.8%)
+  ... Collected 1503/3000 samples (50.1%)
+  ... Collected 1603/3000 samples (53.4%)
+  ... Collected 1703/3000 samples (56.8%)
+  ... Collected 1804/3000 samples (60.1%)
+  ... Collected 1904/3000 samples (63.5%)
+  ... Collected 2003/3000 samples (66.8%)
+  ... Collected 2103/3000 samples (70.1%)
+  ... Collected 2204/3000 samples (73.5%)
+  ... Collected 2304/3000 samples (76.8%)
+  ... Collected 2404/3000 samples (80.1%)
+  ... Collected 2505/3000 samples (83.5%)
+  ... Collected 2605/3000 samples (86.8%)
+  ... Collected 2705/3000 samples (90.2%)
+  ... Collected 2806/3000 samples (93.5%)
+  ... Collected 2906/3000 samples (96.9%)
+[PASS] Successfully collected 3000 samples in 60.04s!
+[PASS] Saved CSV dataset: /ros2_ws/src/ros2_modbus_gateway/benchmark/latency.csv
+[PASS] Saved CSV dataset: /ros2_ws/src/ros2_modbus_gateway/benchmark/benchmark_results.csv
+[PASS] Saved benchmark summary: /ros2_ws/src/ros2_modbus_gateway/benchmark/summary.json
+
+============================================================================
+ 📈 1,000회 지연 및 지터 벤치마크 통계 요약
+============================================================================
+  • Modbus FC03 RTT (ms) : Mean=0.385, P50=0.3611, P95=0.5466, P99=0.6629, Max=1.1025
+  • Polling Jitter  (ms) : Mean=0.0099, P50=0.0049, P95=0.0351, P99=0.0917, Max=0.2048
+  • Sample->ROS Lat (ms) : Mean=14.4086, P50=14.382, P95=14.6615, P99=14.8046, Max=15.1052
+  • Gateway CPU 점유율  : 1.68% (SLA < 2.0%: PASS)
+  • SLA 검증 판정       : P99 RTT <= 5ms [PASS], P99 Jitter <= 2ms [PASS]
+============================================================================

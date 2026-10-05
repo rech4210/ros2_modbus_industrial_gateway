@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-10-05T14:19:11Z",
+  "target_samples": 3000,
+  "collected_samples": 3000,
+  "wall_duration_sec": 60.04,
+  "effective_rate_hz": 49.97,
+  "system": {
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python_version": "3.12.3",
+    "cpu_count": 12,
+    "gateway_pid": 611,
+    "cpu_usage_pct": 1.68,
+    "cpu_budget_max_pct": 2.0,
+    "cpu_sla_pass": true
+  },
+  "metrics": {
+    "modbus_read_rtt_ms": {
+      "min": 0.2503,
+      "mean": 0.385,
+      "p50": 0.3611,
+      "p95": 0.5466,
+      "p99": 0.6629,
+      "max": 1.1025,
+      "std": 0.0859
+    },
+    "polling_interval_ms": {
+      "min": 19.7952,
+      "mean": 20.0,
+      "p50": 19.9998,
+      "p95": 20.0203,
+      "p99": 20.0687,
+      "max": 20.1723,
+      "std": 0.0194
+    },
+    "polling_jitter_ms": {
+      "min": 0.0,
+      "mean": 0.0099,
+      "p50": 0.0049,
+      "p95": 0.0351,
+      "p99": 0.0917,
+      "max": 0.2048,
+      "std": 0.0167
+    },
+    "sample_to_ros_latency_ms": {
+      "min": 13.6286,
+      "mean": 14.4086,
+      "p50": 14.382,
+      "p95": 14.6615,
+      "p99": 14.8046,
+      "max": 15.1052,
+      "std": 0.1246
+    }
+  },
+  "sla_criteria": {
+    "p99_rtt_limit_ms": 5.0,
+    "p99_rtt_actual_ms": 0.6629,
+    "p99_rtt_pass": true,
+    "p99_jitter_limit_ms": 2.0,
+    "p99_jitter_actual_ms": 0.0917,
+    "p99_jitter_pass": true,
+    "overall_pass": true
+  }
+}

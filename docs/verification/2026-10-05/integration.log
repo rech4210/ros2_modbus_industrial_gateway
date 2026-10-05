@@ -1,0 +1,28 @@
+================================================================
+ Running Step 9: ROS 2 Service & PLC Integration Tests
+================================================================
+[INFO] Waiting for gateway services and initial /plc/state...
+[PASS] Gateway node is online and operational.
+[PASS] Startup alarm cleared: Fault cleared successfully
+
+--- Testing SETPOINT boundaries (0, 1000, 1001) ---
+[PASS] SETPOINT 0 confirmed
+[PASS] SETPOINT 1000 confirmed
+[PASS] SETPOINT 1001 correctly rejected: error_code=1 (Setpoint value exceeds maximum allowable range (0~1000))
+
+--- Testing START and STOP cycle ---
+[PASS] START confirmed, PLC is running (sensor_raw=500)
+[PASS] STOP confirmed, PLC is stopped
+
+--- Testing Single Command Slot BUSY Rejection ---
+Results: Command executed successfully (err=0), Command slot occupied (err=4)
+[PASS] Concurrent request arbitration verified.
+
+--- Testing Physical E-Stop Interlock Guard ---
+[PASS] START rejected during E-Stop: error_code=5 (Cannot START while alarm latch is active)
+[PASS] ClearFault rejected during E-Stop: error_code=6 (Cannot clear fault: physical E-Stop, fault, or alarm active)
+[PASS] E-Stop restored and unlatched: Fault cleared successfully
+
+================================================================
+ [ALL INTEGRATION TESTS PASSED 100%]
+================================================================

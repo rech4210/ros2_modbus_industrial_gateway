@@ -1,0 +1,25 @@
+
+============================================================================
+ 🚀 Phase 4 Step 9: 16대 양산 시나리오 자동화 검증 스위트 (100% PASS 검증)
+============================================================================
+  [PASS] 시나리오  1: 정상 START → STOP - 명령 CONFIRMED 및 running 플래그 전이 일치
+  [PASS] 시나리오  2: SETPOINT 경계값 - 0/1000 수락, 1001 초과값 INVALID_ARGUMENT(1) 거부
+  [PASS] 시나리오  3: 알람 래치 중 제어 시도 - 알람 활성 중 START 요청 쓰기 차단 및 ALARM_ACTIVE(5) 즉시 거부
+  [PASS] 시나리오  4: 동시 서비스 호출 - 단일 명령 슬롯 경합 방어, Command executed successfully / Command slot occupied
+  [PASS] 시나리오  5: 패킷 DROP 주입 [Latency: 94.19ms] - 3회 연속 실패 확정 후 알람 발행 (지연: 94.19ms)
+  [PASS] 시나리오  6: TCP DISCONNECT 주입 [Latency: 1.24ms] - 소켓 EOF/RST 감지 즉시 COMM_FAULT 알람 (지연: 1.24ms)
+  [PASS] 시나리오  7: 지속적 응답 DELAY 200ms [Latency: 77.87ms] - 25ms 타임아웃 3회 누적(75ms) 감지 알람 (지연: 77.87ms)
+  [PASS] 시나리오  8: PLC FREEZE 주입 [Latency: 82.10ms] - FC03 응답 수신 중 80ms Heartbeat 정체 감지 HEARTBEAT_STALE(15) (지연: 82.10ms)
+  [PASS] 시나리오  9: 패킷 MALFORMED 주입 - 변조 응답 PROTOCOL_ERROR 감지, 표본 기각 및 소켓 재연결 방어
+  [PASS] 시나리오 10: 패킷 1회 DROP - 1회 패킷 유실 시 consecutive_failures=1 누적 후 다음 주기 회복, 알람 미발생
+  [PASS] 시나리오 11: 쓰기 ACK 유실 - 쓰기 중 단절 시 자동 재전송 금지 및 UNKNOWN 거부 회신 (Write register timed out after 25ms)
+  [PASS] 시나리오 12: NORMAL 복구 - 2초 이내 소켓 재연결 및 50Hz data_valid=true 회복 확인
+  [PASS] 시나리오 13: 통신 복구 후 래치 확인 - 통신은 복구되었으나 알람 래치 유지(alarm_active=true) 및 운전 금지 (ALARM_ACTIVE=5)
+  [PASS] 시나리오 14: 1-shot ClearFault 호출 - 1회 리셋 서비스 호출로 alarm_active=false 및 제어권 즉시 복귀 (MTTR 극소화)
+  [PASS] 시나리오 15: 늦게 연결된 구독자 - Transient Local QoS로 신규 구독자가 최신 알람 상태 1회 즉시 수신
+  [PASS] 시나리오 16: 게이트웨이 자체 Watchdog - 상위 제어기 100ms 수신 타임아웃 만료 시 Controlled Deceleration Stop 자율 발동
+
+============================================================================
+ 📊 검증 종합 결과: 16 / 16 시나리오 PASS (통과율: 100.0%)
+ 📁 결함 이벤트 기록: /ros2_ws/src/ros2_modbus_gateway/benchmark/fault_events.csv
+============================================================================

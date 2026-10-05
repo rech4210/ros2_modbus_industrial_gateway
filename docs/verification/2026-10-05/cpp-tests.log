@@ -1,0 +1,291 @@
+Starting >>> ros2_modbus_gateway
+UpdateCTestConfiguration  from :/ros2_ws/build/ros2_modbus_gateway/CTestConfiguration.ini
+Parse Config file:/ros2_ws/build/ros2_modbus_gateway/CTestConfiguration.ini
+   Site: aa284e2ee78e
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20261005-1415 - Experimental
+UpdateCTestConfiguration  from :/ros2_ws/build/ros2_modbus_gateway/CTestConfiguration.ini
+Parse Config file:/ros2_ws/build/ros2_modbus_gateway/CTestConfiguration.ini
+Test project /ros2_ws/build/ros2_modbus_gateway
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: test_config
+
+1: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_config.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_config.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_config" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_config.gtest.xml"
+1: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+1: Test timeout computed to be: 60
+1: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+1:  - /ros2_ws/build/ros2_modbus_gateway/test_config --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_config.gtest.xml
+1: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+1: [==========] Running 12 tests from 2 test suites.
+1: [----------] Global test environment set-up.
+1: [----------] 11 tests from ConfigTest
+1: [ RUN      ] ConfigTest.DefaultStationConfigIsValid
+1: [       OK ] ConfigTest.DefaultStationConfigIsValid (0 ms)
+1: [ RUN      ] ConfigTest.DefaultGatewayConfigIsValid
+1: [       OK ] ConfigTest.DefaultGatewayConfigIsValid (0 ms)
+1: [ RUN      ] ConfigTest.EmptyStationsFails
+1: [       OK ] ConfigTest.EmptyStationsFails (0 ms)
+1: [ RUN      ] ConfigTest.InstanceNameBoundaries
+1: [       OK ] ConfigTest.InstanceNameBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.StationIdBoundaries
+1: [       OK ] ConfigTest.StationIdBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.PlcHostBoundaries
+1: [       OK ] ConfigTest.PlcHostBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.PlcPortBoundaries
+1: [       OK ] ConfigTest.PlcPortBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.UnitIdBoundaries
+1: [       OK ] ConfigTest.UnitIdBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.AddressBaseBoundaries
+1: [       OK ] ConfigTest.AddressBaseBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.TimingBoundaries
+1: [       OK ] ConfigTest.TimingBoundaries (0 ms)
+1: [ RUN      ] ConfigTest.MultiStationValidation
+1: [       OK ] ConfigTest.MultiStationValidation (0 ms)
+1: [----------] 11 tests from ConfigTest (0 ms total)
+1:
+1: [----------] 1 test from ClockTest
+1: [ RUN      ] ClockTest.MonotonicClockNowNs
+1: [       OK ] ClockTest.MonotonicClockNowNs (0 ms)
+1: [----------] 1 test from ClockTest (0 ms total)
+1:
+1: [----------] Global test environment tear-down
+1: [==========] 12 tests from 2 test suites ran. (0 ms total)
+1: [  PASSED  ] 12 tests.
+1: -- run_test.py: return code 0
+1: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_config.gtest.xml'
+1: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_config.gtest.xml'
+1/6 Test #1: test_config ......................   Passed    0.06 sec
+test 2
+    Start 2: test_safety_monitor
+
+2: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_safety_monitor.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_safety_monitor.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_safety_monitor" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_safety_monitor.gtest.xml"
+2: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+2: Test timeout computed to be: 60
+2: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+2:  - /ros2_ws/build/ros2_modbus_gateway/test_safety_monitor --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_safety_monitor.gtest.xml
+2: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+2: [==========] Running 16 tests from 1 test suite.
+2: [----------] Global test environment set-up.
+2: [----------] 16 tests from SafetyMonitorTest
+2: [ RUN      ] SafetyMonitorTest.InitialStateIsAlarmActiveWithStartupCause
+2: [       OK ] SafetyMonitorTest.InitialStateIsAlarmActiveWithStartupCause (0 ms)
+2: [ RUN      ] SafetyMonitorTest.NormalHeartbeatProgressionDoesNotTripAlarm
+2: [       OK ] SafetyMonitorTest.NormalHeartbeatProgressionDoesNotTripAlarm (0 ms)
+2: [ RUN      ] SafetyMonitorTest.HeartbeatWrapAroundIsHandledCleanly
+2: [       OK ] SafetyMonitorTest.HeartbeatWrapAroundIsHandledCleanly (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ConsecutiveFailuresThresholdTripsAlarm
+2: [       OK ] SafetyMonitorTest.ConsecutiveFailuresThresholdTripsAlarm (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ConsecutiveFailuresResetOnObserve
+2: [       OK ] SafetyMonitorTest.ConsecutiveFailuresResetOnObserve (0 ms)
+2: [ RUN      ] SafetyMonitorTest.HeartbeatStallDetectionViaObserve
+2: [       OK ] SafetyMonitorTest.HeartbeatStallDetectionViaObserve (0 ms)
+2: [ RUN      ] SafetyMonitorTest.HeartbeatStallDetectionViaEvaluateStale
+2: [       OK ] SafetyMonitorTest.HeartbeatStallDetectionViaEvaluateStale (0 ms)
+2: [ RUN      ] SafetyMonitorTest.HeartbeatReversalDetection
+2: [       OK ] SafetyMonitorTest.HeartbeatReversalDetection (0 ms)
+2: [ RUN      ] SafetyMonitorTest.InterlockDetectionEstopAndFaultCode
+2: [       OK ] SafetyMonitorTest.InterlockDetectionEstopAndFaultCode (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ClearAlarmFailsUnderFaultOrCommFailure
+2: [       OK ] SafetyMonitorTest.ClearAlarmFailsUnderFaultOrCommFailure (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ClearAlarmSucceedsWhenHealthy
+2: [       OK ] SafetyMonitorTest.ClearAlarmSucceedsWhenHealthy (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ConcurrentStressSafetyMonitor
+2: [       OK ] SafetyMonitorTest.ConcurrentStressSafetyMonitor (3 ms)
+2: [ RUN      ] SafetyMonitorTest.ClearAlarmRejectedBeforeAnySampleReceived
+2: [       OK ] SafetyMonitorTest.ClearAlarmRejectedBeforeAnySampleReceived (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ClearAlarmRejectedWhenAlarmTrippedBitActive
+2: [       OK ] SafetyMonitorTest.ClearAlarmRejectedWhenAlarmTrippedBitActive (0 ms)
+2: [ RUN      ] SafetyMonitorTest.HeartbeatStallExactBoundaryAt80ms
+2: [       OK ] SafetyMonitorTest.HeartbeatStallExactBoundaryAt80ms (0 ms)
+2: [ RUN      ] SafetyMonitorTest.ConcurrentClearAlarmAndIoFailureBoundary
+2: [       OK ] SafetyMonitorTest.ConcurrentClearAlarmAndIoFailureBoundary (0 ms)
+2: [----------] 16 tests from SafetyMonitorTest (4 ms total)
+2:
+2: [----------] Global test environment tear-down
+2: [==========] 16 tests from 1 test suite ran. (4 ms total)
+2: [  PASSED  ] 16 tests.
+2: -- run_test.py: return code 0
+2: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_safety_monitor.gtest.xml'
+2: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_safety_monitor.gtest.xml'
+2/6 Test #2: test_safety_monitor ..............   Passed    0.06 sec
+test 3
+    Start 3: test_gateway_buffer
+
+3: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_buffer.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_gateway_buffer.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_gateway_buffer" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_buffer.gtest.xml"
+3: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+3: Test timeout computed to be: 60
+3: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+3:  - /ros2_ws/build/ros2_modbus_gateway/test_gateway_buffer --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_buffer.gtest.xml
+3: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+3: [==========] Running 17 tests from 1 test suite.
+3: [----------] Global test environment set-up.
+3: [----------] 17 tests from GatewayBufferTest
+3: [ RUN      ] GatewayBufferTest.InitialStateIsDisconnectedWithAlarmActive
+3: [       OK ] GatewayBufferTest.InitialStateIsDisconnectedWithAlarmActive (0 ms)
+3: [ RUN      ] GatewayBufferTest.BeginConnectionAdvancesGenerationAndSetsConnecting
+3: [       OK ] GatewayBufferTest.BeginConnectionAdvancesGenerationAndSetsConnecting (0 ms)
+3: [ RUN      ] GatewayBufferTest.AcceptSampleAtomicSnapshotAndRecovery
+3: [       OK ] GatewayBufferTest.AcceptSampleAtomicSnapshotAndRecovery (0 ms)
+3: [ RUN      ] GatewayBufferTest.GenerationIsolationDropsStaleSamples
+3: [       OK ] GatewayBufferTest.GenerationIsolationDropsStaleSamples (0 ms)
+3: [ RUN      ] GatewayBufferTest.SubmitCommandAcceptanceRules
+3: [       OK ] GatewayBufferTest.SubmitCommandAcceptanceRules (0 ms)
+3: [ RUN      ] GatewayBufferTest.SingleCommandSlotSaturationEnforcesBUSY
+3: [       OK ] GatewayBufferTest.SingleCommandSlotSaturationEnforcesBUSY (0 ms)
+3: [ RUN      ] GatewayBufferTest.TakeCommandLifecycleAndGenerationIsolation
+3: [       OK ] GatewayBufferTest.TakeCommandLifecycleAndGenerationIsolation (0 ms)
+3: [ RUN      ] GatewayBufferTest.ResetCommandClearsAlarmLatchOnConfirmed
+3: [       OK ] GatewayBufferTest.ResetCommandClearsAlarmLatchOnConfirmed (0 ms)
+3: [ RUN      ] GatewayBufferTest.AlienMethodCallDeadlockPrevention
+3: [       OK ] GatewayBufferTest.AlienMethodCallDeadlockPrevention (0 ms)
+3: [ RUN      ] GatewayBufferTest.LockHoldTimeBenchmarkUnderOneMicrosecond
+3: [       OK ] GatewayBufferTest.LockHoldTimeBenchmarkUnderOneMicrosecond (5 ms)
+3: [ RUN      ] GatewayBufferTest.MultiThreadedStressConcurrency
+3: [       OK ] GatewayBufferTest.MultiThreadedStressConcurrency (5 ms)
+3: [ RUN      ] GatewayBufferTest.SubmitCommandRejectsStaleSample
+3: [       OK ] GatewayBufferTest.SubmitCommandRejectsStaleSample (0 ms)
+3: [ RUN      ] GatewayBufferTest.SubmitCommandRejectsInvalidSample
+3: [       OK ] GatewayBufferTest.SubmitCommandRejectsInvalidSample (0 ms)
+3: [ RUN      ] GatewayBufferTest.EvaluateStaleUpdatesBufferStateAndDispatchesAlarmCallback
+3: [       OK ] GatewayBufferTest.EvaluateStaleUpdatesBufferStateAndDispatchesAlarmCallback (0 ms)
+3: [ RUN      ] GatewayBufferTest.TakeCommandTimeoutDispatchesCommandCallback
+3: [       OK ] GatewayBufferTest.TakeCommandTimeoutDispatchesCommandCallback (0 ms)
+3: [ RUN      ] GatewayBufferTest.ResetCommandConfirmationDispatchesAlarmClearedCallback
+3: [       OK ] GatewayBufferTest.ResetCommandConfirmationDispatchesAlarmClearedCallback (0 ms)
+3: [ RUN      ] GatewayBufferTest.ConcurrentClearFaultAndIoFailureBoundary
+3: [       OK ] GatewayBufferTest.ConcurrentClearFaultAndIoFailureBoundary (0 ms)
+3: [----------] 17 tests from GatewayBufferTest (11 ms total)
+3:
+3: [----------] Global test environment tear-down
+3: [==========] 17 tests from 1 test suite ran. (11 ms total)
+3: [  PASSED  ] 17 tests.
+3: -- run_test.py: return code 0
+3: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_buffer.gtest.xml'
+3: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_buffer.gtest.xml'
+3/6 Test #3: test_gateway_buffer ..............   Passed    0.07 sec
+test 4
+    Start 4: test_modbus_client
+
+4: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_modbus_client.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_modbus_client.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_modbus_client" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_modbus_client.gtest.xml"
+4: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+4: Test timeout computed to be: 60
+4: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+4:  - /ros2_ws/build/ros2_modbus_gateway/test_modbus_client --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_modbus_client.gtest.xml
+4: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+4: [==========] Running 9 tests from 1 test suite.
+4: [----------] Global test environment set-up.
+4: [----------] 9 tests from ModbusClientTest
+4: [ RUN      ] ModbusClientTest.ConnectsSuccessfully
+4: [       OK ] ModbusClientTest.ConnectsSuccessfully (0 ms)
+4: [ RUN      ] ModbusClientTest.BulkReadFC03ParsesRegisters
+4: [       OK ] ModbusClientTest.BulkReadFC03ParsesRegisters (0 ms)
+4: [ RUN      ] ModbusClientTest.WriteCoilFC05Succeeds
+4: [       OK ] ModbusClientTest.WriteCoilFC05Succeeds (0 ms)
+4: [ RUN      ] ModbusClientTest.WriteRegisterFC06Succeeds
+4: [       OK ] ModbusClientTest.WriteRegisterFC06Succeeds (0 ms)
+4: [ RUN      ] ModbusClientTest.ResponseTimeoutFiresAt25ms
+4: [       OK ] ModbusClientTest.ResponseTimeoutFiresAt25ms (25 ms)
+4: [ RUN      ] ModbusClientTest.MalformedProtocolIdRejected
+4: [       OK ] ModbusClientTest.MalformedProtocolIdRejected (0 ms)
+4: [ RUN      ] ModbusClientTest.ModbusExceptionHandled
+4: [       OK ] ModbusClientTest.ModbusExceptionHandled (0 ms)
+4: [ RUN      ] ModbusClientTest.ByteCountMismatchRejected
+4: [       OK ] ModbusClientTest.ByteCountMismatchRejected (0 ms)
+4: [ RUN      ] ModbusClientTest.RepeatedConnectionsDoNotLeakFileDescriptors
+4: [       OK ] ModbusClientTest.RepeatedConnectionsDoNotLeakFileDescriptors (10 ms)
+4: [----------] 9 tests from ModbusClientTest (40 ms total)
+4:
+4: [----------] Global test environment tear-down
+4: [==========] 9 tests from 1 test suite ran. (40 ms total)
+4: [  PASSED  ] 9 tests.
+4: -- run_test.py: return code 0
+4: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_modbus_client.gtest.xml'
+4: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_modbus_client.gtest.xml'
+4/6 Test #4: test_modbus_client ...............   Passed    0.10 sec
+test 5
+    Start 5: test_gateway_runtime
+
+5: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_runtime.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_gateway_runtime.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_gateway_runtime" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_runtime.gtest.xml"
+5: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+5: Test timeout computed to be: 60
+5: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+5:  - /ros2_ws/build/ros2_modbus_gateway/test_gateway_runtime --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_runtime.gtest.xml
+5: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+5: [==========] Running 5 tests from 1 test suite.
+5: [----------] Global test environment set-up.
+5: [----------] 5 tests from GatewayRuntimeTest
+5: [ RUN      ] GatewayRuntimeTest.StartsAndRecoversToOperational
+5: [       OK ] GatewayRuntimeTest.StartsAndRecoversToOperational (21 ms)
+5: [ RUN      ] GatewayRuntimeTest.SubmitsAndConfirmsCommand
+5: [StationContext] Executing queued command id=1 cmd=1
+5: [StationContext] Command confirmed! id=1 counter=1
+5: [       OK ] GatewayRuntimeTest.SubmitsAndConfirmsCommand (30 ms)
+5: [ RUN      ] GatewayRuntimeTest.MultiStationIsolation
+5: [       OK ] GatewayRuntimeTest.MultiStationIsolation (20 ms)
+5: [ RUN      ] GatewayRuntimeTest.SubmitsAndConfirmsSetSetpointCommand
+5: [StationContext] Executing queued command id=1 cmd=4
+5: [StationContext] Command confirmed! id=1 counter=1
+5: [       OK ] GatewayRuntimeTest.SubmitsAndConfirmsSetSetpointCommand (30 ms)
+5: [ RUN      ] GatewayRuntimeTest.SingleCommandSlotBusyRejection
+5: [       OK ] GatewayRuntimeTest.SingleCommandSlotBusyRejection (20 ms)
+5: [----------] 5 tests from GatewayRuntimeTest (124 ms total)
+5:
+5: [----------] Global test environment tear-down
+5: [==========] 5 tests from 1 test suite ran. (124 ms total)
+5: [  PASSED  ] 5 tests.
+5: -- run_test.py: return code 0
+5: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_runtime.gtest.xml'
+5: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_runtime.gtest.xml'
+5/6 Test #5: test_gateway_runtime .............   Passed    0.19 sec
+test 6
+    Start 6: test_gateway_node
+
+6: Test command: /usr/bin/python3 "-u" "/opt/ros/jazzy/share/ament_cmake_test/cmake/run_test.py" "/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_node.gtest.xml" "--package-name" "ros2_modbus_gateway" "--output-file" "/ros2_ws/build/ros2_modbus_gateway/ament_cmake_gtest/test_gateway_node.txt" "--command" "/ros2_ws/build/ros2_modbus_gateway/test_gateway_node" "--gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_node.gtest.xml"
+6: Working Directory: /ros2_ws/build/ros2_modbus_gateway
+6: Test timeout computed to be: 60
+6: -- run_test.py: invoking following command in '/ros2_ws/build/ros2_modbus_gateway':
+6:  - /ros2_ws/build/ros2_modbus_gateway/test_gateway_node --gtest_output=xml:/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_node.gtest.xml
+6: Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+6: [==========] Running 7 tests from 1 test suite.
+6: [----------] Global test environment set-up.
+6: [----------] 7 tests from GatewayNodeTest
+6: [ RUN      ] GatewayNodeTest.NodeInitializesPublishersAndServices
+6: [       OK ] GatewayNodeTest.NodeInitializesPublishersAndServices (29 ms)
+6: [ RUN      ] GatewayNodeTest.PublishesInitialStartupSafetyAlarmViaTransientLocal
+6: [       OK ] GatewayNodeTest.PublishesInitialStartupSafetyAlarmViaTransientLocal (84 ms)
+6: [ RUN      ] GatewayNodeTest.ClearFaultServiceResponds
+6: [       OK ] GatewayNodeTest.ClearFaultServiceResponds (23 ms)
+6: [ RUN      ] GatewayNodeTest.TriggerCommandRejectsInvalidArgumentImmediately
+6: [       OK ] GatewayNodeTest.TriggerCommandRejectsInvalidArgumentImmediately (23 ms)
+6: [ RUN      ] GatewayNodeTest.GuardConditionTriggersImmediateAlarmPublish
+6: [       OK ] GatewayNodeTest.GuardConditionTriggersImmediateAlarmPublish (93 ms)
+6: [ RUN      ] GatewayNodeTest.TriggerCommandRejectsInvalidValueImmediately
+6: [       OK ] GatewayNodeTest.TriggerCommandRejectsInvalidValueImmediately (32 ms)
+6: [ RUN      ] GatewayNodeTest.MultiStationEndpointsCreated
+6: [       OK ] GatewayNodeTest.MultiStationEndpointsCreated (9 ms)
+6: [----------] 7 tests from GatewayNodeTest (296 ms total)
+6:
+6: [----------] Global test environment tear-down
+6: [==========] 7 tests from 1 test suite ran. (297 ms total)
+6: [  PASSED  ] 7 tests.
+6: -- run_test.py: return code 0
+6: -- run_test.py: inject classname prefix into gtest result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_node.gtest.xml'
+6: -- run_test.py: verify result file '/ros2_ws/build/ros2_modbus_gateway/test_results/ros2_modbus_gateway/test_gateway_node.gtest.xml'
+6/6 Test #6: test_gateway_node ................   Passed    0.49 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Label Time Summary:
+gtest    =   0.97 sec*proc (6 tests)
+
+Total Test time (real) =   0.97 sec
+Finished <<< ros2_modbus_gateway [1.01s]
+
+Summary: 1 package finished [1.16s]
